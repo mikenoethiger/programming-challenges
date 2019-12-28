@@ -47,21 +47,7 @@ char read_char() {
 	return buf;
 }
 
-/**
- * Check neighbourship of a with s, s being
- *
- * @param a
- * @param s
- * @param n
- * @param m
- * @param moves
- * @return
- */
-bool is_neighbour(int a, int s, int n, int m, int moves[8]) {
-	// neighbour indexes of x:
-	// 4 1 5
-	// 0 x 2
-	// 7 3 6
+bool is_neighbour(int a, int p, int n, int m, int permuations[8]) {
 	int neighbours[8] = {1,1,1,1,1,1,1,1};
 	// left edge
 	if (a % m == 0) {
@@ -87,45 +73,44 @@ bool is_neighbour(int a, int s, int n, int m, int moves[8]) {
 		neighbours[3] = 0;
 		neighbours[6] = 0;
 	}
-	return neighbours[s];
+	return neighbours[p];
 }
 
 void solve(int n, int m) {
 	int s = n*m;
 	int i, j;
 	char buf;
-	char field[s][2];
+	char field[s];
 
+	// Move permutations to move a given point
+	// in a two dimensional grid to one of its
+	// eight adjacence points. The permuations
+	// must be applied to two dimensional data
+	// stored in a one dimensional array
 	int m_l = -1;
 	int m_r = +1;
 	int m_u = -m;
 	int m_d = m;
-	int m_l_u = m_l + m_u;
-	int m_r_u = m_r + m_u;
-	int m_l_d = m_l+ m_d;
-	int m_r_d = m_r + m_d;
-	// adjacence indexes relative to index x:
-	// 4 1 5
-	// 0 x 2
-	// 7 3 6
-	int moves[8] = { m_l, m_u, m_r, m_d, m_l_u, m_r_u, m_r_d, m_l_d };
+	// access a permutation value using the index
+	// from the following diagram.
+	// (e.g. 0 is the left permuation)
+	int permuations[8] = { m_l, m_u, m_r, m_d, m_l + m_u, m_r + m_u, m_r + m_d, m_l + m_d };
 
 	// read field input data
 	for (i = 0; i < s; i++) {
-		field[i][0] = read_char();
-		field[i][1] = '0';
+		field[i] = read_char();
 	}
 
-	int k, mines;
+	int k, p, mines;
 	for (i = 0; i < s; i++) {
 		if (i > 0 && i % m == 0) printf("\n");
-		if (field[i][0] == '*') {
+		if (field[i] == '*') {
 			printf("*");
 		} else {
 			mines = 0;
-			for (j = 0; j < 8; j++) {
-				k = i + moves[j];
-				if (is_neighbour(i, j, n, m, moves) && field[k][0] == '*') {
+			for (p = 0; p < 8; p++) {
+				k = i + permuations[p];
+				if (is_neighbour(i, p, n, m, permuations) && field[k] == '*') {
 					mines++;
 				}
 			}
