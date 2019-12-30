@@ -4,6 +4,7 @@
 #include <sys/uio.h>
 #include <unistd.h>
 #include <math.h>
+#include <stdlib.h>
 
 int read_num(char *t) {
 	char buf;
@@ -40,37 +41,68 @@ int *nums[10] = {n0, n1, n2, n3, n4, n5, n6, n7, n8, n9};
 int n[10];
 char buf;
 
-void print_num_row(int num_index, int row, int s, int is_last_num) {
+int printn(char c, int n) {
+	int i;
+	for (i = 0; i < n; i++) {
+		printf("%c", c);
+	}
+	return n;
+}
+
+int print_num_row(int num_index, int row, int s, int l, int c) {
 	char sign;
 	int i;
+	int b = 0;
+	int d = c-l;
 	if (row == 0) {
-		printf(" ");
 		sign = nums[num_index][0] ? '-' : ' ';
-		for (i = 0; i < s; i++) printf("%c", sign);
-		if (!is_last_num) printf(" ");
+		if (sign == '-') {
+			b += printn(' ', d+1);
+			b += printn(sign, s);
+		}
 	} else if (row >= 1 && row <= s) {
 		sign = nums[num_index][1] ? '|' : ' ';
-		printf("%c", sign);
-		for (i = 0; i < s; i++) printf(" ");
+		if (sign == '|') {
+			b += printn(' ', d);
+			printf("%c", sign);
+			b++;
+		}
 		sign = nums[num_index][2] ? '|' : ' ';
-		printf("%c", sign);
+		if (sign == '|') {
+			b += printn(' ', s+(c-(l+b))+1);
+			printf("%c", sign);
+			b++;
+		}
 	} else if (row == s+1) {
-		printf(" ");
 		sign = nums[num_index][3] ? '-' : ' ';
-		for (i = 0; i < s; i++) printf("%c", sign);
-		if (!is_last_num) printf(" ");
+		if (sign == '-') {
+			b += printn(' ', d+1);
+			b += printn(sign, s);
+		}
 	} else if (row >= s+2 && row <= 2*s+1) {
 		sign = nums[num_index][4] ? '|' : ' ';
-		printf("%c", sign);
-		for (i = 0; i < s; i++) printf(" ");
+		if (sign == '|') {
+			b += printn(' ', d);
+			printf("%c", sign);
+			b++;
+		}
 		sign = nums[num_index][5] ? '|' : ' ';
-		printf("%c", sign);
+		if (sign == '|') {
+			b += printn(' ', s+(c-(l+b))+1);
+			printf("%c", sign);
+			b++;
+		}
 	} else if (row == 2*s+2) {
-		printf(" ");
 		sign = nums[num_index][6] ? '-' : ' ';
-		for (i = 0; i < s; i++) printf("%c", sign);
-		if (!is_last_num) printf(" ");
+		if (sign == '-') {
+			b += printn(' ', d+1);
+			b += printn(sign, s);
+		}
+	} else {
+		printf("could not detect row section\n");
+		exit(1);
 	}
+	return b;
 }
 
 void print_num(int s) {
@@ -82,15 +114,16 @@ void print_num(int s) {
 
 	int cols = size*(s+2) + s -1;
 	int rows = 2*s+3;
+	int w = s+2;
 	char grid[rows][cols];
 
 	int pivot_num = 0;
 
-	int i, j;
+	int i, j, curr_col;
 	for (i = 0; i < rows; i++) {
+		curr_col = 0;
 		for (j = 0; j < size; j++) {
-			print_num_row(n[j], i, s, j == size-1);
-			printf(" ");
+			curr_col += print_num_row(n[j], i, s, curr_col, j*(w+1));
 		}
 		printf("\n");
 	}
