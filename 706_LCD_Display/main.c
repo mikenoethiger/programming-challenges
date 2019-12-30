@@ -4,6 +4,10 @@
 #include <sys/uio.h>
 #include <unistd.h>
 #include <math.h>
+#include <stdlib.h>
+
+#define HORIZONTAL '-'
+#define VERTICAL '|'
 
 /**
  * Reads a number from STDIN as follows:
@@ -39,91 +43,166 @@ int read_num(char *t) {
 	return num * coeff;
 }
 
-// structure:
-// x0x  row: 0
-// 1x2  row: 1 to s
-// x3x  row: s+1
-// 4x5  row: s+2 to 2s+1
-// x6x  row: 2s+2
-//           0 1 2 3 4 5 6
-int n0[7] = {1,1,1,0,1,1,1};
-int n1[7] = {0,0,1,0,0,1,0};
-int n2[7] = {1,0,1,1,1,0,1};
-int n3[7] = {1,0,1,1,0,1,1};
-int n4[7] = {0,1,1,1,0,1,0};
-int n5[7] = {1,1,0,1,0,1,1};
-int n6[7] = {1,1,0,1,1,1,1};
-int n7[7] = {1,0,1,0,0,1,0};
-int n8[7] = {1,1,1,1,1,1,1};
-int n9[7] = {1,1,1,1,0,1,1};
-int *nums[10] = {n0, n1, n2, n3, n4, n5, n6, n7, n8, n9};
-int n[10];
+// structures of a digit labelled with indexes:
+//             height
+// x0x  row 0: 0
+// 1x2  row 1: 1 to s
+// x3x  row 2: s+1
+// 4x5  row 3: s+2 to 2s+1
+// x6x  row 4: 2s+2
+// index     0  1  2  3  4  5  6
+int n0[7] = {1, 1, 1, 0, 1, 1, 1};
+int n1[7] = {0, 0, 1, 0, 0, 1, 0};
+int n2[7] = {1, 0, 1, 1, 1, 0, 1};
+int n3[7] = {1, 0, 1, 1, 0, 1, 1};
+int n4[7] = {0, 1, 1, 1, 0, 1, 0};
+int n5[7] = {1, 1, 0, 1, 0, 1, 1};
+int n6[7] = {1, 1, 0, 1, 1, 1, 1};
+int n7[7] = {1, 0, 1, 0, 0, 1, 0};
+int n8[7] = {1, 1, 1, 1, 1, 1, 1};
+int n9[7] = {1, 1, 1, 1, 0, 1, 1};
+int *structures[10] = {n0, n1, n2, n3, n4, n5, n6, n7, n8, n9};
+// bounds := defines the height boundaries for each row relative to size s
+//           bounds are defined per structure index, thus row 1 and 3 are
+//           covered twice by structure index 1,2 and 4,5
+// digits := the digits to print on console
+int bounds[7];
+int digits[10];
 char buf;
 
-void print_num_row(int num_index, int row, int s, int is_last_num, int is_first_num) {
-	char sign;
+int printn(char c, int n) {
 	int i;
-	if (row == 0) {
-		// first row
-		sign = nums[num_index][0] ? '-' : ' ';
-		if (is_last_num && sign == ' ') return;
-		printf(" ");
-		if (!is_first_num) printf("  ");
-		for (i = 0; i < s; i++) printf("%c", sign);
-		if (!is_last_num) printf(" ");
-	} else if (row >= 1 && row <= s) {
-		// first vertical section
-		if (!is_first_num) printf("  ");
-		sign = nums[num_index][1] ? '|' : ' ';
-		printf("%c", sign);
-		sign = nums[num_index][2] ? '|' : ' ';
-		if (sign == ' ' && is_last_num) return;
-		for (i = 0; i < s; i++) printf(" ");
-		printf("%c", sign);
-	} else if (row == s+1) {
-		// mid section
-		if (!is_first_num) printf("  ");
-		printf(" ");
-		sign = nums[num_index][3] ? '-' : ' ';
-		for (i = 0; i < s; i++) printf("%c", sign);
-		if (!is_last_num) printf(" ");
-	} else if (row >= s+2 && row <= 2*s+1) {
-		// second vertical section
-		if (!is_first_num) printf("  ");
-		sign = nums[num_index][4] ? '|' : ' ';
-		printf("%c", sign);
-		sign = nums[num_index][5] ? '|' : ' ';
-		if (sign == ' ' && is_last_num) return;
-		for (i = 0; i < s; i++) printf(" ");
-		printf("%c", sign);
-	} else if (row == 2*s+2) {
-		// last row
-		if (!is_first_num) printf("  ");
-		printf(" ");
-		sign = nums[num_index][6] ? '-' : ' ';
-		for (i = 0; i < s; i++) printf("%c", sign);
-		if (!is_last_num) printf(" ");
+	for (i = 0; i < n; i++) {
+		printf("%c", c);
 	}
+	return n;
+}
+
+/**
+ * Print a horizontal section of a digit.
+ * In the following diagram, the index 0, 3 and 6
+ * represent horizontal sections of a digit:
+ * x0x
+ * 1x2
+ * x3x
+ * 4x5
+ * x6x
+ *
+ * @param sign character used for printing
+ * @param s digit size
+ * @param l last column index
+ * @param c current column index
+ * @return number of printed characters
+ */
+int print_horizontal_row(char sign, int s, int l, int c) {
+	// n := number of printed characters
+	// d := difference of last column index and current column index
+	int n = 0;
+	int d = c - l;
+	n += printn(' ', d + 1);
+	n += printn(sign, s);
+	n += printn(' ', 1);
+	return n;
+}
+
+/**
+ * Print a vertical section of a digit.
+ * In the following diagram, the indexes 1,2,4 and 5
+ * represent vertical sections of a digit:
+ * x0x
+ * 1x2
+ * x3x
+ * 4x5
+ * x6x
+ *
+ * @param sign character used for printing
+ * @param s digit size
+ * @param l last column index
+ * @param c current column index
+ * @return
+ */
+int print_vertical_row(char sign1, char sign2, int s, int l, int c) {
+	// n := buffer of currently printed chars
+	// d := difference of last column index and current column index
+	int n = 0;
+	int d = c - l;
+	n += printn(' ', d);
+	if (sign1 != ' ') {
+		printf("%c", sign1);
+		n++;
+	}
+	n += printn(' ', s + (c - (l + n)) + 1);
+	printf("%c", sign2);
+	n++;
+	return n;
+}
+
+/**
+ *
+ * @param si structure index
+ * @param row
+ * @param s digit size
+ * @param l last column index
+ * @param c current column index
+ * @return the number of printed characters
+ */
+int print_row(int si, int row, int s, int l, int c) {
+	char sign, sign2;
+	// n := number of printed characters
+	// b := boundary index to
+	// d := difference of last column index and current column index
+	int n = 0;
+	int b;
+	int d = c - l;
+
+	int i;
+	for (i = 0; i < 7; i++) {
+		if (row <= bounds[i]) {
+			b = i;
+			break;
+		}
+	}
+	if (b % 3 == 0) {
+		sign = structures[si][b] ? HORIZONTAL : ' ';
+		n += print_horizontal_row(sign, s, l, c);
+	} else {
+		sign = structures[si][b] ? VERTICAL : ' ';
+		sign2 = structures[si][b+1] ? VERTICAL : ' ';
+		n += print_vertical_row(sign, sign2, s, l, c);
+	}
+
+	return n;
 }
 
 void print_num(int s) {
-	int size = 0;
+	// n := number of digits
+	int n = 0;
 	while (read(STDIN_FILENO, &buf, sizeof(buf)) && buf != '\n') {
 		if (buf == ' ' || buf == '\t') continue;
-		n[size++] = buf - '0';
+		digits[n++] = buf - '0';
 	}
 
-	int cols = size*(s+2) + s -1;
-	int rows = 2*s+3;
-	char grid[rows][cols];
-
-	int pivot_num = 0;
-
+	// w := width in characters of a single digit relative to size s
+	// h := height in characters of a single digit relative to size s
+	// l := last column index (i.e. index of last print statement)
+	int w = s + 2;
+	int h = 2 * s + 3;
+	int l;
 	int i, j;
-	for (i = 0; i < rows; i++) {
-		for (j = 0; j < size; j++) {
-			print_num_row(n[j], i, s, j == size-1, j == 0);
-//			if (j < size-1) printf(" ");
+
+	bounds[0] = 0;
+	bounds[1] = s;
+	bounds[2] = bounds[1];
+	bounds[3] = s+1;
+	bounds[4] = 2 * s + 1;
+	bounds[5] = bounds[4];
+	bounds[6] = 2 * s + 2;
+
+	// write digits row by row
+	for (i = 0; i < h; i++) {
+		l = 0;
+		for (j = 0; j < n; j++) {
+			l += print_row(digits[j], i, s, l, j * (w + 1));
 		}
 		printf("\n");
 	}
