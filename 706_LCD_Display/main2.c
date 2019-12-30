@@ -27,16 +27,16 @@ int read_num(char *t) {
 	return num * coeff;
 }
 
-int n0[7] = {1,1,1,0,1,1,1};
-int n1[7] = {0,0,1,0,0,1,0};
-int n2[7] = {1,0,1,1,1,0,1};
-int n3[7] = {1,0,1,1,0,1,1};
-int n4[7] = {0,1,1,1,0,1,0};
-int n5[7] = {1,1,0,1,0,1,1};
-int n6[7] = {1,1,0,1,1,1,1};
-int n7[7] = {1,0,1,0,0,1,0};
-int n8[7] = {1,1,1,1,1,1,1};
-int n9[7] = {1,1,1,1,0,1,1};
+int n0[7] = {1, 1, 1, 0, 1, 1, 1};
+int n1[7] = {0, 0, 1, 0, 0, 1, 0};
+int n2[7] = {1, 0, 1, 1, 1, 0, 1};
+int n3[7] = {1, 0, 1, 1, 0, 1, 1};
+int n4[7] = {0, 1, 1, 1, 0, 1, 0};
+int n5[7] = {1, 1, 0, 1, 0, 1, 1};
+int n6[7] = {1, 1, 0, 1, 1, 1, 1};
+int n7[7] = {1, 0, 1, 0, 0, 1, 0};
+int n8[7] = {1, 1, 1, 1, 1, 1, 1};
+int n9[7] = {1, 1, 1, 1, 0, 1, 1};
 int *nums[10] = {n0, n1, n2, n3, n4, n5, n6, n7, n8, n9};
 int n[10];
 char buf;
@@ -49,55 +49,51 @@ int printn(char c, int n) {
 	return n;
 }
 
+int print_horizontal(char sign, int s, int l, int c) {
+	int b = 0;
+	int d = c - l;
+	b += printn(' ', d + 1);
+	b += printn(sign, s);
+	b += printn(' ', 1);
+	return b;
+}
+
+int print_vertical(char sign1, char sign2, int s, int l, int c) {
+	int b = 0;
+	int d = c - l;
+	b += printn(' ', d);
+	if (sign1 != ' ') {
+		printf("%c", sign1);
+		b++;
+	}
+	b += printn(' ', s + (c - (l + b)) + 1);
+	printf("%c", sign2);
+	b++;
+	return b;
+}
+
 int print_num_row(int num_index, int row, int s, int l, int c) {
-	char sign;
+	char sign, sign2;
 	int i;
 	int b = 0;
-	int d = c-l;
+	int d = c - l;
 	if (row == 0) {
 		sign = nums[num_index][0] ? '-' : ' ';
-		if (sign == '-') {
-			b += printn(' ', d+1);
-			b += printn(sign, s);
-		}
+		b += print_horizontal(sign, s, l, c);
 	} else if (row >= 1 && row <= s) {
 		sign = nums[num_index][1] ? '|' : ' ';
-		if (sign == '|') {
-			b += printn(' ', d);
-			printf("%c", sign);
-			b++;
-		}
-		sign = nums[num_index][2] ? '|' : ' ';
-		if (sign == '|') {
-			b += printn(' ', s+(c-(l+b))+1);
-			printf("%c", sign);
-			b++;
-		}
-	} else if (row == s+1) {
+		sign2 = nums[num_index][2] ? '|' : ' ';
+		b += print_vertical(sign, sign2, s, l, c);
+	} else if (row == s + 1) {
 		sign = nums[num_index][3] ? '-' : ' ';
-		if (sign == '-') {
-			b += printn(' ', d+1);
-			b += printn(sign, s);
-		}
-	} else if (row >= s+2 && row <= 2*s+1) {
+		b += print_horizontal(sign, s, l, c);
+	} else if (row >= s + 2 && row <= 2 * s + 1) {
 		sign = nums[num_index][4] ? '|' : ' ';
-		if (sign == '|') {
-			b += printn(' ', d);
-			printf("%c", sign);
-			b++;
-		}
-		sign = nums[num_index][5] ? '|' : ' ';
-		if (sign == '|') {
-			b += printn(' ', s+(c-(l+b))+1);
-			printf("%c", sign);
-			b++;
-		}
-	} else if (row == 2*s+2) {
+		sign2 = nums[num_index][5] ? '|' : ' ';
+		b += print_vertical(sign, sign2, s, l, c);
+	} else if (row == 2 * s + 2) {
 		sign = nums[num_index][6] ? '-' : ' ';
-		if (sign == '-') {
-			b += printn(' ', d+1);
-			b += printn(sign, s);
-		}
+		b += print_horizontal(sign, s, l, c);
 	} else {
 		printf("could not detect row section\n");
 		exit(1);
@@ -112,9 +108,9 @@ void print_num(int s) {
 		n[size++] = buf - '0';
 	}
 
-	int cols = size*(s+2) + s -1;
-	int rows = 2*s+3;
-	int w = s+2;
+	int cols = size * (s + 2) + s - 1;
+	int rows = 2 * s + 3;
+	int w = s + 2;
 	char grid[rows][cols];
 
 	int pivot_num = 0;
@@ -123,7 +119,7 @@ void print_num(int s) {
 	for (i = 0; i < rows; i++) {
 		curr_col = 0;
 		for (j = 0; j < size; j++) {
-			curr_col += print_num_row(n[j], i, s, curr_col, j*(w+1));
+			curr_col += print_num_row(n[j], i, s, curr_col, j * (w + 1));
 		}
 		printf("\n");
 	}
