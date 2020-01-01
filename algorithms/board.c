@@ -1,15 +1,19 @@
 /*
- * Algorithms to manipulate a 2-dimensional board,
- * stored in a 1-dimensional array.
- */
-
-/* ====================
- * GENERAL TERMS
- * ====================
- *
+ * ===========================
+ * Author: Mike Nöthiger
+ * Date:   01.01.2020
+ * ===========================
+ * DESCRIPTION
+ * ===========================
+ * Algorithms to manipulate a
+ * 2-dimensional board, stored
+ * in a 1-dimensional array.
+ * ===========================
+ * DEFINITIONS
+ * ===========================
  * n  := board height
  * m  := board width
- * ai := adjacency index (0..7)
+ * a  := adjacency index (0..7)
  *
  * Adjacency Indexes:
  * 0 := up
