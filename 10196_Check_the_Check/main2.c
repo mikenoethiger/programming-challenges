@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <math.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define BOARD_WIDTH 8
 #define BOARD_HEIGHT 8
@@ -85,33 +86,56 @@ void print_board() {
 	printf("\n");
 }
 
-int move(int i, int m, int *j) {
-	int vn[8] = {1,1,1,1,1,1,1,1};
-	int w = BOARD_WIDTH;
-	int h = BOARD_HEIGHT;
+void b_check_edges(int i, int n, int m, int *edges) {
+	edges[0] = 0;
+	edges[1] = 0;
+	edges[2] = 0;
+	edges[3] = 0;
+	// left edge
+	if (i % m == 0) edges[3] = 1;
+	// right edge
+	if ((i+1) % m == 0) edges[1] = 1;
+	// top edge
+	if (i/m == 0) edges[0] = 1;
+	// bottom edge
+	if (i/m == (n-1)) edges[2] = 1;
+}
 
-	if (i % w == 0) {
-		vn[4] = 0;
-		vn[3] = 0;
-		vn[7] = 0;
+int b_move(int i, int a, int n, int m, int *j) {
+	// edges  := edge adjacency of i
+	// moves  := amounts to add to index i in
+	//           order to move to an adjacent
+	//           position (0..7)
+	// ia     := invalid adjacency indexes when i
+	//           is adjacent to an edge (0..3)
+	// va     := valid adjacency indexes for i
+	int edges[4];
+	int m_up = -m; int m_down = m;
+	int m_left = -1; int m_right = 1;
+	int moves[8] = {m_up, m_right, m_down, m_left,
+					m_up + m_left, m_up + m_right,
+					m_down + m_right, m_down + m_left};
+	int ia[4][3] = {{4,0,5},  // taboo moves if top edge
+					{5,1,6},  // taboo moves if right edge
+					{7,2,6},  // taboo moves if bottom edge
+					{4,3,7}}; // taboo moves if left edge
+	int va[8] = {1,1,1,1,1,1,1,1};
+	int k;
+
+	b_check_edges(i, n, m, edges);
+	for (k = 0; k < 4; k++) {
+		if (edges[k]) {
+			va[ia[k][0]] = 0;
+			va[ia[k][1]] = 0;
+			va[ia[k][2]] = 0;
+		}
 	}
-	if ((i+1) % w == 0) {
-		vn[5] = 0;
-		vn[1] = 0;
-		vn[6] = 0;
-	}
-	if (i/w == 0) {
-		vn[4] = 0;
-		vn[0] = 0;
-		vn[5] = 0;
-	}
-	if (i/w == (h-1)) {
-		vn[7] = 0;
-		vn[2] = 0;
-		vn[6] = 0;
-	}
-	*j = vn[m] ? i + moves[m] : i;
-	return vn[m];
+	*j = va[a] ? i + moves[a] : i;
+	return va[a];
+}
+
+int move(int i, int m, int *j) {
+	return b_move(i, m, BOARD_HEIGHT, BOARD_WIDTH, j);
 }
 
 int move_n(int i, int *m_arr, int m_n, int *j) {
