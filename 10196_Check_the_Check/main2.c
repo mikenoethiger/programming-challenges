@@ -12,8 +12,6 @@
 #define BLACK 0
 #define WHITE 1
 
-#define DEBUG_TIMEOUT 1
-
 int read_num(char *t) {
 	char buf;
 	int num = 0;
@@ -73,7 +71,6 @@ bool read_board() {
 			read(STDIN_FILENO, &board[k], sizeof(char));
 			if (dot_only && board[k] != '.') dot_only = false;
 		}
-		// skip new lines
 		read(STDIN_FILENO, &buf, sizeof(char));
 	}
 	return !dot_only;
@@ -114,7 +111,6 @@ int move(int i, int m, int *j) {
 		vn[6] = 0;
 	}
 	*j = vn[m] ? i + moves[m] : i;
-	debug_move(i, m, *j);
 	return vn[m];
 }
 

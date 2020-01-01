@@ -149,18 +149,6 @@ void print_board() {
 	printf("\n");
 }
 
-// Print board, marking a special position i with char c
-// and sleep for some time afterwards
-void debug_move(int i, int m, int j) {
-	if (!debug) return;
-	char buf = board[i];
-	board[i] = 'X';
-	printf("move %s from %d to %d\n", move_names[m], i, j);
-//	print_board();
-	board[i] = buf;
-	sleep(DEBUG_TIMEOUT);
-}
-
 /**
  * Executes move m from position i if and
  * only if it is a valid movement i.e. the
@@ -261,7 +249,7 @@ int move_r(int i, int m, int *j) {
  */
 int can_attack(int i, char a, char t, int p) {
 	// ca := can attack
-	// j  := board index (field to attack)
+	// j  := field to attack (board index)
 	// k  := iterating index
 	int ca = 0;
 	int j, k;
@@ -288,7 +276,6 @@ int can_attack(int i, char a, char t, int p) {
 			}
 			break;
 		case 'r':
-//			debug = true;
 			// check 4 recursive rook moves
 			for (k = 0; k < 4; k++) {
 				move_r(i, m_r[k], &j);
@@ -329,8 +316,8 @@ void check() {
 	// check[1] := white is in check
 	// pa       := attacking player (0=black, 1=white)
 	// pd       := defending player (0=black, 1=white)
-	// a		:= attacking figure character
-	// t		:= target figure ('k' or 'K')
+	// a		:= attacking figure char
+	// t		:= target figure char ('k' or 'K')
 	int i;
 	int check[2] = {0, 0};
 	int pa, pd;
@@ -367,8 +354,6 @@ int main() {
 	while (read_board()) {
 		printf("Game #%d: ", i++);
 		check();
-//		print_board();
-//		printf("\n");
 		// skip line break
 		read(STDIN_FILENO, &buf, sizeof(buf));
 	}
