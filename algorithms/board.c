@@ -9,7 +9,7 @@
  * 2-dimensional board, stored
  * in a 1-dimensional array.
  * ===========================
- * DEFINITIONS
+ * DEFINITIONS & FORMULA
  * ===========================
  * n  := board height
  * m  := board width
@@ -27,6 +27,13 @@
  * 405
  * 3x1
  * 726
+ *
+ * Given an index i on an N*M board (0 <= i <= N*M).
+ * i is adjacent to an edge if it is of size:
+ * Left edge: i % M == 0
+ * Right edge: (i + 1) % M == 0
+ * Top edge: i / M == 0
+ * Bottom edge: i / M == (N-1)
 */
 
 /**
