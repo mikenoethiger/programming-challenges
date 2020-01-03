@@ -215,11 +215,12 @@ void calc_tallest_tower(int N) {
 	int s, i, j;
 	int si, sj, opj;
 	// The i and j for loop (which are the expensive ones), expand as follows:
-	//      i = 0, j = 0..0 (needed for initialization)
-	// -    i = 1, j = 0..1
-	// --   i = 2, j = 0..2
-	// ---  i = 3, j = 0..3
-	// ---- i = 4, j = 0..4
+	//      i = 0,   j = -    (needed for initialization)
+	// -    i = 1,   j = 0..0
+	// --   i = 2,   j = 0..1
+	// ---  i = 3,   j = 0..2
+	// ---- i = 4,   j = 0..3
+	//      i = N-1, j = 0..N-2
 	// The computational cost is equal to the sum of 1...N
 	// which is n(n+1)/2 which is in O(n^2)
 	for (i = 0; i < N; i++) {
