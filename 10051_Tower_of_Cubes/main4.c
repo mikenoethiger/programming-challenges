@@ -9,16 +9,10 @@
 
 char *faces[] = {"front", "back", "left", "right", "top", "bottom"};
 
-/*
- * DATA STRUCTURES
- */
-
 typedef struct part_solution {
-	/* if cube above is equal to the cube represented in this solution,
-	 * the end of tower is reached */
-	int cube; // the cube above this solution
-	int side; // the face up side of the cube above
-	int height; // the height of this solution
+	int cube;
+	int side;
+	int height;
 } PartSolution;
 
 typedef struct stack_element {
@@ -81,27 +75,10 @@ void *stack_pop(Stack *stack) {
 	return value;
 }
 
-/*
- * UTILITY FUNCTIONS
- */
-
 int opposite_side(int s) {
 	return s % 2 == 0 ? s + 1 : s - 1;
 }
 
-/**
- * Reads a number from STDIN as follows:
- * - Leading white spaces, line breaks and tabs will be skipped.
- * - A leading '0' will be returned immediately.
- * - A leading '-' will multiply the subsequent number with -1.
- * - The first character from STDIN that is not '0' <= c <= '9'
- *   will terminate the algorithm. This character will be written
- *   to the out parameter t.
- *
- * @param t (nullable) out parameter that will hold the terminating
- *          character.
- * @return the number or zero if not a number
- */
 int read_num(char *t) {
 	char buf;
 	int num = 0;
@@ -123,14 +100,6 @@ int read_num(char *t) {
 	return num * coeff;
 }
 
-/**
- * Read cube data from STDIN and write
- * the color value of each side to buf
- * which has to be an int array of size 6.
- *
- * @param buf
- * @return
- */
 void read_cube(int *buf) {
 	int i;
 	for (i = 0; i < 6; i++) {
@@ -138,16 +107,6 @@ void read_cube(int *buf) {
 	}
 }
 
-/**
- * Prints tower matrix, each part solution will be
- * represented by its cube and side index.
- *
- * Can be used for debugging purposes for example
- * to trace the cubes of a tower by following the
- * matrix path.
- *
- * @param towers
- */
 void print_towers(PartSolution *towers[SIZE][6]) {
 	int i, s;
 	for (i = 0; i < SIZE; i++) {
@@ -164,20 +123,12 @@ void print_towers(PartSolution *towers[SIZE][6]) {
 	printf("\n");
 }
 
-/*
- * ALGORITHM
- */
-
 int cube[6];
 int cubes[SIZE][6];
 PartSolution *towers[SIZE][6];
-// towers_c[c][0] := cube index of biggest tower for color c
-// towers_c[c][1] := up-facing side of cube towers_c[c][0]
-// towers_c[c][2] := height of biggest tower for color c
 int towers_c[COLORS][3];
 
 void calc_tallest_tower(int N) {
-	// mc := max for cube
 	int c, ops, opc, i, s, mc;
 	int max[3] = {0,0,0};
 	PartSolution *ps;
@@ -200,7 +151,7 @@ void calc_tallest_tower(int N) {
 			} else if (towers_c[c][0] != i) {
 				towers[i][s]->cube = towers_c[c][0];
 				towers[i][s]->side = towers_c[c][1];
-				towers[i][s]->height = towers_c[c][2] + 1; /* this height is probably obsolete for part solution? */
+				towers[i][s]->height = towers_c[c][2] + 1;
 			}
 		}
 		for (s = 0; s < 6; s++) {
@@ -208,13 +159,9 @@ void calc_tallest_tower(int N) {
 			ops = opposite_side(s);
 			opc = cube[ops]-1;
 			if (towers_c[opc][2] < towers[i][s]->height) {
-//				printf("extend existing tower\n");
-				// i can make a bigger tower
-				// make cube[i][s] a child of towers_c[c]
 				towers_c[opc][0] = i;
 				towers_c[opc][1] = s;
 				towers_c[opc][2] = towers[i][s]->height;
-//				printf("built new tower of height %d\n", towers_c[opc][2]);
 			}
 			if (towers[i][s]->height > max[2]) {
 				max[0] = i;
@@ -244,10 +191,6 @@ void calc_tallest_tower(int N) {
 		p = (PartSolution*) stack_pop(stack);
 		printf("%d %s\n", p->cube + 1, faces[p->side]);
 	}
-
-//	printf("max tower height: %d\n", max[2]);
-
-
 }
 
 int main() {
