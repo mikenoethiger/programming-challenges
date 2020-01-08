@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#define SIZE 10
+#define SIZE 500
 #define COLORS 100
 
 char *faces[] = {"front", "back", "left", "right", "top", "bottom"};
@@ -168,142 +168,112 @@ void print_towers(PartSolution *towers[SIZE][6]) {
  * ALGORITHM
  */
 
+// cube        := cube color configuration
+// towers      := tower backtracking
+// towers_c    := color cache; which gives information on the
+//                currently tallest tower (identified by the
+//                cube index) for any given color
+// towers_c[c]    := tallest tower for color c (0..99)
+//                   c is the color of the face down side of the cube
+// towers_c[c][0] := cube index
+// towers_c[c][1] := side index (face up side)
+// towers_c[c][2] := absolute height of tower
 int cube[6];
-int cubes[SIZE][6];
 PartSolution *towers[SIZE][6];
-// towers_c[c][0] := cube index of biggest tower for color c
-// towers_c[c][1] := up-facing side of cube towers_c[c][0]
-// towers_c[c][2] := height of biggest tower for color c
 int towers_c[COLORS][3];
 
+/**
+ * Seconds version for the tower of cubes algorithm, that uses more
+ * extensive caching, thus reducing the time complexity from O(n^2)
+ * to O(n).
+ *
+ * The additional cache is maintained in the towers_c array. This
+ * array stores a reference to a cube that currently forms the largest
+ * tower for a given color c.
+ *
+ * Whenever we process a new cube, we just consult the color cache for
+ * all colors of the cube and extend existing solutions or introduce
+ * new if there's doesn't exist a solution for a color yet.
+ *
+ * The tower structures are still maintained in the towers array.
+ *
+ * Time Complexity: O(n^2)
+ *
+ * @param N the number of cubes
+ */
 void calc_tallest_tower(int N) {
-	// mc := max for cube
-	int c, ops, opc, i, s, mc;
-	int max[3] = {0,0,0};
-	PartSolution *ps;
+	// s   := side index
+	// ops := opposite side index of s
+	// c   := color value of s (0..99)
+	// opc := color value of ops (0..99)
+	// m   := max tower height
+	// mi  := cube index of max tower
+	// ms  := side index of cube mi (face up side)
+	int s, ops, c, opc;
+	int m, mi, ms;
+	int i;
+	m = 0; mi = 0; ms = 0;
 	for (i = 0; i < COLORS; i++) {
 		towers_c[i][0] = -1;
 		towers_c[i][1] = -1;
 		towers_c[i][2] = -1;
 	}
-	for (i = N-1; i >= 0; i--) {
+	for (i = 0; i < N; i++) {
 		read_cube(cube);
 		for (s = 0; s < 6; s++) {
-			c = cube[s]-1;
 			ops = opposite_side(s);
+			c = cube[s]-1;
 			opc = cube[ops]-1;
 			towers[i][s] = part_solution_create(i, s, 1);
 			if (towers_c[c][0] == -1) {
-				printf("init tower for color %d\n", c);
-				// init new biggest tower for yet non existing color
 				towers_c[c][0] = i;
 				towers_c[c][1] = ops;
 				towers_c[c][2] = 1;
 			} else if (towers_c[c][0] != i) {
-				// that means a solution for my color exists.
-				// i have to check if the new size of this tower
-				// exceeds the max tower for the color of my opposite side
 				towers[i][s]->cube = towers_c[c][0];
 				towers[i][s]->side = towers_c[c][1];
-				towers[i][s]->height = towers_c[c][2] + 1; /* this height is probably obsolete for part solution? */
-				if (towers_c[opc][2] < (towers_c[c][2] + 1)) {
-					printf("extend existing tower\n");
-					// i can make a bigger tower
-					// make cube[i][s] a child of towers_c[c]
-					towers_c[opc][0] = i;
-					towers_c[opc][1] = s;
-					towers_c[opc][2] = towers[i][s]->height;
-					printf("built new tower of height %d\n", towers_c[opc][2]);
-				}
+				towers[i][s]->height = towers_c[c][2] + 1;
 			}
-			if (towers[i][s]->height > max[2]) {
-				max[0] = i;
-				max[1] = s;
-				max[2] = towers[i][s]->height;
+		}
+		// turned out we have to update the towers_c cache in a separate loop
+		// otherwise we might lose solutions. Because if the first side of a cube
+		// builds a new biggest tower for any color c, we won't be able to extend
+		// this color c by any other side of the same cube who'd have this color,
+		// since a cube can't be placed onto himself.
+		for (s = 0; s < 6; s++) {
+			c = cube[s]-1;
+			ops = opposite_side(s);
+			opc = cube[ops]-1;
+			if (towers_c[opc][2] < towers[i][s]->height) {
+				towers_c[opc][0] = i;
+				towers_c[opc][1] = s;
+				towers_c[opc][2] = towers[i][s]->height;
 			}
-//			printf("i=%d, s=%d, mi=%d, ms=%d, mh=%d mhc2=%d\n", i, s, max[0], max[1], max[2], towers_c[1][2]);
-//			print_towers(towers);
-//			sleep(1);
+			if (towers[i][s]->height > m) {
+				mi = i;
+				ms = s;
+				m = towers[i][s]->height;
+			}
 		}
 	}
 
-	printf("max tower height: %d\n", max[2]);
 
+	int tmp_i;
+	Stack *stack = stack_create();
+	stack_push(stack, part_solution_create(mi, ms, m));
+	while (towers[mi][ms]->cube != mi) {
+		stack_push(stack, towers[mi][ms]);
+		tmp_i = mi;
+		mi = towers[mi][ms]->cube;
+		ms = towers[tmp_i][ms]->side;
+	}
 
-
-//	for (i = 0; i < N; i++) {
-//		read_cube(cube);
-//		// initialization step; add six towers of height 1,
-//		// one for each side of the cube i.
-//		for (s = 0; s < 6; s++) {
-//			c = cube[s];
-//			opp = opposite_side(s);
-//			cubes[i][s] = cube[s];
-//			towers[i][s] = part_solution_create(i, 0, 1);
-//			if (towers_c[c] == NULL) {
-//				towers_c[c] = towers[i][s];
-//			} else {
-//				// that means a solution for my color exists.
-//				// i have to check if the new size of this tower
-//				// exceeds the max tower for the color of my opposite side
-//				if (towers_c[cube[opp]] < towers_c[c]+1) {
-//					// i can make a bigger tower
-//					// make cube[i][s] a child of towers_c[c]
-//
-//				}
-//
-//				// put me below the tower for my color
-//				// above me shall be the max tower for my color
-//				// i become a new part solution. above me is part solution
-//				// currently stored for my color, i will extend this part
-//				// solution and become the new part solution
-//				// above me is towers_c[cube[s]] with opposite side of towers_c[cube[s]]->side
-//				// touch points: cubes[i][s] with cubes[]
-//				towers_c[c] =
-//			}
-//		}
-//
-//		for (j = 0; j < i; j++) {
-//			// for each side of cube i, check whether it fits below any existing tower sj
-//			for (si = 0; si < 6; si++) for (sj = 0; sj < 6; sj++) {
-//					opj = opposite_side(sj);
-//					// if the cube colors match, and the resulting new tower is bigger
-//					// then the current one stored for cube i, we replace the current
-//					// one with the new one.
-//					if (cubes[j][opj] == cubes[i][si] && towers[i][si]->height < towers[j][sj]->height + 1) {
-//						towers[i][si]->cube = j;
-//						towers[i][si]->side = sj;
-//						towers[i][si]->height = towers[j][sj]->height + 1;
-//						// maintain a reference to the overall largest tower
-//						if (towers[i][si]->height > m) {
-//							m = towers[i][si]->height;
-//							mi = i;
-//							ms = si;
-//						}
-//					}
-//				}
-//		}
-//	}
-
-//	// Reverse the bottom to top structure to make it
-//	// a top to bottom structure which is an output
-//	// requirement of the programming challenge.
-//	Stack *stack = stack_create();
-//	int tmp_i;
-//	stack_push(stack, part_solution_create(mi, ms, m));
-//	while (towers[mi][ms]->cube != mi) {
-//		stack_push(stack, towers[mi][ms]);
-//		tmp_i = mi;
-//		mi = towers[mi][ms]->cube;
-//		ms = towers[tmp_i][ms]->side;
-//	}
-//
-//	PartSolution *p;
-//	printf("%d\n", m);
-//	for (i = 0; i < m; i++) {
-//		p = (PartSolution*) stack_pop(stack);
-//		printf("%d %s\n", p->cube + 1, faces[p->side]);
-//	}
+	PartSolution *p;
+	printf("%d\n", m);
+	for (i = 0; i < m; i++) {
+		p = (PartSolution*) stack_pop(stack);
+		printf("%d %s\n", p->cube + 1, faces[p->side]);
+	}
 }
 
 int main() {
