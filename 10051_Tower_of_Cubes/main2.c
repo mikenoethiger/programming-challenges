@@ -3,6 +3,8 @@
 #include <sys/uio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
 
 #define SIZE 500
 #define COLORS 100
@@ -132,10 +134,11 @@ int read_num(char *t) {
  * @return
  */
 void read_cube(int *buf) {
-	int i;
-	for (i = 0; i < 6; i++) {
-		buf[i] = read_num(NULL);
-	}
+//	int i;
+//	for (i = 0; i < 6; i++) {
+//		buf[i] = read_num(NULL);
+//	}
+	scanf("%d%d%d%d%d%d", buf, buf+1, buf+2, buf+3, buf+4, buf+5);
 }
 
 /**
@@ -182,6 +185,13 @@ int cube[6];
 PartSolution *towers[SIZE][6];
 int towers_c[COLORS][3];
 
+void print_reverse(int i, int s, PartSolution *towers[SIZE][6]) {
+	if (towers[i][s]->cube != i) {
+		print_reverse(towers[i][s]->cube, towers[i][s]->side, towers);
+		printf("%d %s\n", towers[i][s]->cube + 1, faces[towers[i][s]->side]);
+	}
+}
+
 /**
  * Seconds version for the tower of cubes algorithm, that uses more
  * extensive caching, thus reducing the time complexity from O(n^2)
@@ -192,12 +202,14 @@ int towers_c[COLORS][3];
  * tower for a given color c.
  *
  * Whenever we process a new cube, we just consult the color cache for
- * all colors of the cube and extend existing solutions or introduce
- * new if there's doesn't exist a solution for a color yet.
+ * all colors of this cube and extend existing solutions or introduce
+ * new if no solution does exist for a color yet.
  *
- * The tower structures are still maintained in the towers array.
+ * The tower structures are still maintained in the towers array but
+ * we now only have to make a single call to the cache in order to
+ * find the largest tower that should be extended by a cube.
  *
- * Time Complexity: O(n^2)
+ * Time Complexity: O(n)
  *
  * @param N the number of cubes
  */
@@ -213,11 +225,9 @@ void calc_tallest_tower(int N) {
 	int m, mi, ms;
 	int i;
 	m = 0; mi = 0; ms = 0;
-	for (i = 0; i < COLORS; i++) {
-		towers_c[i][0] = -1;
-		towers_c[i][1] = -1;
-		towers_c[i][2] = -1;
-	}
+
+	memset(towers_c, -1, sizeof(towers_c));
+
 	for (i = 0; i < N; i++) {
 		read_cube(cube);
 		for (s = 0; s < 6; s++) {
@@ -236,10 +246,10 @@ void calc_tallest_tower(int N) {
 			}
 		}
 		// turned out we have to update the towers_c cache in a separate loop
-		// otherwise we might lose solutions. Because if the first side of a cube
-		// builds a new biggest tower for any color c, we won't be able to extend
-		// this color c by any other side of the same cube who'd have this color,
-		// since a cube can't be placed onto himself.
+		// otherwise we might lose solutions. If the first side of a cube forms
+		// a new tower for any color c, we won't be able to extend the opc by any
+		// other side of the same cube who'd have this color, since a cube can't
+		// be placed on top of himself.
 		for (s = 0; s < 6; s++) {
 			c = cube[s]-1;
 			ops = opposite_side(s);
@@ -257,30 +267,18 @@ void calc_tallest_tower(int N) {
 		}
 	}
 
-
-	int tmp_i;
-	Stack *stack = stack_create();
-	stack_push(stack, part_solution_create(mi, ms, m));
-	while (towers[mi][ms]->cube != mi) {
-		stack_push(stack, towers[mi][ms]);
-		tmp_i = mi;
-		mi = towers[mi][ms]->cube;
-		ms = towers[tmp_i][ms]->side;
-	}
-
-	PartSolution *p;
 	printf("%d\n", m);
-	for (i = 0; i < m; i++) {
-		p = (PartSolution*) stack_pop(stack);
-		printf("%d %s\n", p->cube + 1, faces[p->side]);
-	}
+	print_reverse(mi, ms, towers);
+	printf("%d %s\n", mi+1, faces[ms]);
 }
 
 int main() {
 	int N;
 	int c = 1;
-	while ((N = read_num(NULL))) {
+	while (scanf("%d", &N) != EOF) {
+//		while ((N = read_num(NULL))) {
 		printf("Case #%d\n", c++);
+//		printf("num: %d\n", N);
 		calc_tallest_tower(N);
 		printf("\n");
 	}

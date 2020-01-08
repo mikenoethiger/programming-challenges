@@ -3,6 +3,8 @@
 #include <sys/uio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
 
 #define SIZE 500
 #define COLORS 100
@@ -101,10 +103,7 @@ int read_num(char *t) {
 }
 
 void read_cube(int *buf) {
-	int i;
-	for (i = 0; i < 6; i++) {
-		buf[i] = read_num(NULL);
-	}
+	scanf("%d%d%d%d%d%d", buf, buf+1, buf+2, buf+3, buf+4, buf+5);
 }
 
 void print_towers(PartSolution *towers[SIZE][6]) {
@@ -124,24 +123,29 @@ void print_towers(PartSolution *towers[SIZE][6]) {
 }
 
 int cube[6];
-int cubes[SIZE][6];
 PartSolution *towers[SIZE][6];
 int towers_c[COLORS][3];
 
-void calc_tallest_tower(int N) {
-	int c, ops, opc, i, s, mc;
-	int max[3] = {0,0,0};
-	PartSolution *ps;
-	for (i = 0; i < COLORS; i++) {
-		towers_c[i][0] = -1;
-		towers_c[i][1] = -1;
-		towers_c[i][2] = -1;
+void print_reverse(int i, int s, PartSolution *towers[SIZE][6]) {
+	if (towers[i][s]->cube != i) {
+		print_reverse(towers[i][s]->cube, towers[i][s]->side, towers);
+		printf("%d %s\n", towers[i][s]->cube + 1, faces[towers[i][s]->side]);
 	}
+}
+
+void calc_tallest_tower(int N) {
+	int s, ops, c, opc;
+	int m, mi, ms;
+	int i;
+	m = 0; mi = 0; ms = 0;
+
+	memset(towers_c, -1, sizeof(towers_c));
+
 	for (i = 0; i < N; i++) {
 		read_cube(cube);
 		for (s = 0; s < 6; s++) {
-			c = cube[s]-1;
 			ops = opposite_side(s);
+			c = cube[s]-1;
 			opc = cube[ops]-1;
 			towers[i][s] = part_solution_create(i, s, 1);
 			if (towers_c[c][0] == -1) {
@@ -163,40 +167,23 @@ void calc_tallest_tower(int N) {
 				towers_c[opc][1] = s;
 				towers_c[opc][2] = towers[i][s]->height;
 			}
-			if (towers[i][s]->height > max[2]) {
-				max[0] = i;
-				max[1] = s;
-				max[2] = towers[i][s]->height;
+			if (towers[i][s]->height > m) {
+				mi = i;
+				ms = s;
+				m = towers[i][s]->height;
 			}
 		}
 	}
 
-
-	int m, mi, ms, tmp_i;
-	mi = max[0];
-	ms = max[1];
-	m = max[2];
-	Stack *stack = stack_create();
-	stack_push(stack, part_solution_create(mi, ms, m));
-	while (towers[mi][ms]->cube != mi) {
-		stack_push(stack, towers[mi][ms]);
-		tmp_i = mi;
-		mi = towers[mi][ms]->cube;
-		ms = towers[tmp_i][ms]->side;
-	}
-
-	PartSolution *p;
 	printf("%d\n", m);
-	for (i = 0; i < m; i++) {
-		p = (PartSolution*) stack_pop(stack);
-		printf("%d %s\n", p->cube + 1, faces[p->side]);
-	}
+	print_reverse(mi, ms, towers);
+	printf("%d %s\n", mi+1, faces[ms]);
 }
 
 int main() {
 	int N;
 	int c = 1;
-	while ((N = read_num(NULL))) {
+	while (scanf("%d", &N) != EOF) {
 		printf("Case #%d\n", c++);
 		calc_tallest_tower(N);
 		printf("\n");
