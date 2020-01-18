@@ -131,7 +131,7 @@ void solve() {
 
 	for (i = 0; i < cn; i++) {
 		if (candidates[i][1] == WINNER) {
-			printf("%s\n", candidate_names[i]);
+			printf("%s", candidate_names[i]);
 		}
 	}
 }

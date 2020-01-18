@@ -1,6 +1,3 @@
-mkdir -p out
-gcc -o out/main3 -lm -O2 -pipe -ansi -DONLINE_JUDGE main3.c
-out/main3 < input.txt
 Martin Van Buren
 
 Abraham Lincoln

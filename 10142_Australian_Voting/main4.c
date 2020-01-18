@@ -8,12 +8,32 @@
 #define ELIMINATED 2
 #define ELIMINATED_PROCESSED 3
 
-char candidate_names[20][81];
+/* DATA STRUCTURE */
+
+// ballots       := ballot containing candidate indexes
+// ballots[20]   := cache last used candidate for each ballet (i.e. a candidate index)
+//                  PROBABLY OBSOLETE WITH candidates_b?
+// candidates    := information about each candidate
+// candidates[0] := number of votes so far
+// candidates[1] := candidate status:
+//                   0 means still in the game
+//                   1 means winner
+//                   2 means eliminated but ballots voting for him are not yet recounted
+//                   3 means eliminated and ballots voting for him are already recounted
+// candidates_b       := reverse cache; store's indexes of ballots who voted for a candidate
+// candidates_b[1000] := next free index
+char candidate_names[20][81]; // 81 for the terminating null byte
 int candidates[20][2];
 int candidates_b[20][1001];
 int ballots[1000][20];
 
+// cn := total candidates
+// bn := total ballots
+// l  := winner limit, i.e. number of votes to reach in order to win election
+// wi := number of winners
 int cn, bn, l, wi;
+
+/* UTILITY */
 
 void print_votes() {
 	int i;
@@ -34,6 +54,8 @@ void print_votes() {
 	printf("\n");
 	sleep(1);
 }
+
+/* ALGORITHM */
 
 void vote(int b, int c) {
 	candidates[c][0]++;
@@ -65,11 +87,17 @@ void check_tied() {
 	}
 }
 
+/**
+ * Finds the winning candidate(s).
+ */
 void solve() {
 	int i, j;
+
+	// clear candidates and ballots_c cache
 	memset(candidates, 0, sizeof(int) * 20 * 2);
 	memset(candidates_b, 0, sizeof(int) * 20 * 1001);
 
+	// 1. voting round
 	for (i = 0; i < bn; i++) {
 		vote(i, ballots[i][0]);
 	}
@@ -78,12 +106,15 @@ void solve() {
 	int min;
 	while (wi <= 0) {
 		min = INT_MAX;
+		// evaluate min votes
 		for (i = 0; i < cn; i++) {
 			if (candidates[i][1] < ELIMINATED && candidates[i][0] < min) min = candidates[i][0];
 		}
+		// eliminated min candidate(s)
 		for (i = 0; i < cn; i++) {
 			if (candidates[i][0] == min) candidates[i][1] = ELIMINATED;
 		}
+		// re-vote for eliminated candidates
 		for (i = 0; i < cn; i++) {
 			if (candidates[i][1] == ELIMINATED) {
 				for (j = 0; j < candidates_b[i][1000]; j++) {
@@ -100,12 +131,15 @@ void solve() {
 
 	for (i = 0; i < cn; i++) {
 		if (candidates[i][1] == WINNER) {
-			printf("%s\n", candidate_names[i]);
+			printf("%s", candidate_names[i]);
 		}
 	}
 }
 
 int scan_ballots() {
+	// i  := running index
+	// bi := ballot index
+	// n  := line breaks counter
 	int i, bi, n;
 	bi = 0;
 	n = 1;
@@ -115,6 +149,7 @@ int scan_ballots() {
 				bi--; n = 2;
 				break;
 			}
+			// count white spaces / line breaks
 			scanf(" %n", &n);
 			if (n > 1) break;
 			ballots[bi][i]--;
@@ -131,13 +166,7 @@ int main() {
 	for (i = 0; i < cases; i++) {
 		scanf("%d\n", &cn);
 		for (j = 0; j < cn; j++) {
-			ni = 0;
-			scanf("%c", candidate_names[j]);
-			while (candidate_names[j][ni] != '\n') {
-				ni++;
-				scanf("%c", candidate_names[j] + ni);
-			}
-			candidate_names[j][ni] = '\0';
+			fgets(candidate_names[j], 81, stdin);
 		}
 		bn = scan_ballots();
 		l = bn / 2 + 1;
