@@ -3,10 +3,19 @@
 #include <unistd.h>
 #include <strings.h>
 #include <stdbool.h>
+#include <time.h>
 
 #define WINNER 1
 #define ELIMINATED 2
 #define ELIMINATED_PROCESSED 3
+
+/* I tried to analyze the execution time of this algorithm.
+ * Experiments showed, that for an input of 800 votings:
+ * - Time to read input: 0.089923s
+ * - Time to solve and print solution: 0.006333s
+ * Which means reading the input makes 90% of the time consumption.
+ * Unfortunately I could not find a more efficient way to read the input.
+ */
 
 /* DATA STRUCTURE */
 
@@ -32,6 +41,10 @@ int ballots[1000][20];
 // l  := winner limit, i.e. number of votes to reach in order to win election
 // wi := number of winners
 int cn, bn, l, wi;
+
+clock_t start, end;
+double time_read = 0;
+double time_algo = 0;
 
 /* UTILITY */
 
@@ -91,6 +104,7 @@ void check_tied() {
  * Finds the winning candidate(s).
  */
 void solve() {
+	start = clock();
 	int i, j;
 
 	// clear candidates and ballots_c cache
@@ -134,6 +148,8 @@ void solve() {
 			printf("%s", candidate_names[i]);
 		}
 	}
+	end = clock();
+	time_algo += end-start;
 }
 
 int scan_ballots() {
@@ -162,8 +178,8 @@ int scan_ballots() {
 int main() {
 	int cases, i, j, ni;
 	scanf("%d\n", &cases);
-
 	for (i = 0; i < cases; i++) {
+		start = clock();
 		scanf("%d\n", &cn);
 		for (j = 0; j < cn; j++) {
 			fgets(candidate_names[j], 81, stdin);
@@ -171,8 +187,12 @@ int main() {
 		bn = scan_ballots();
 		l = bn / 2 + 1;
 		wi = 0;
+		end = clock();
+		time_read += end-start;
 		solve();
 		if (i < cases-1) printf("\n");
 	}
+	printf("time_read=%f\n", (double) time_read / CLOCKS_PER_SEC);
+	printf("time_algo=%f\n", (double) time_algo / CLOCKS_PER_SEC);
 	return 0;
 }
