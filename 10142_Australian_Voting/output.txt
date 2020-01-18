@@ -1,223 +1,206 @@
-B
+Martin Van Buren
 
-C
+Abraham Lincoln
+Henry Wilson
+Ronald Reagan
 
-B
+Lyndon B. Johnson
 
-A
+Nelson Rockefeller
 
-B
+James A. Garfield
 
-B
+Grover Cleveland
 
-B
+Martin Van Buren
 
-B
-C
-D
+Elbridge Gerry
 
-A
+Richard Nixon
 
-A
+Dwight D. Eisenhower
 
-E
+Ulysses S. Grant
 
-A
+James Madison
 
-A
+James Madison
 
-B
+Grover Cleveland
 
-B
+Henry A. Wallace
 
-A
+Jimmy Carter
 
-B
+Nelson Rockefeller
 
-A
+Richard Nixon
 
-C
+Bill Clinton
 
-C
+Franklin Pierce
 
-C
+George Bush
 
-C
+Ronald Reagan
 
-A
+Henry A. Wallace
 
-B
+Theodore Roosevelt
 
-B
-C
+Alben Barkley
 
-A
+Herbert Hoover
 
-B
+William Howard Taft
 
-C
+Barack Obama
 
-A
-B
+Harry S. Truman
 
-C
+Thomas Jefferson
 
-B
+Hubert Humphrey
 
-A
+Ronald Reagan
 
-B
-C
+Hubert Humphrey
 
-A
+Alben Barkley
 
-A
+John Tyler
 
-A
-D
-E
+Bill Clinton
 
-A
+Nelson Rockefeller
 
-A
+James Monroe
 
-A
+William McKinley
 
-B
+Millard Fillmore
 
-B
-C
+Andrew Jackson
 
-A
+Gerald Ford
 
-A
+James Buchanan
 
-B
+Jimmy Carter
 
-A
+Andrew Johnson
 
-A
-B
+Charles Dawes
 
-A
-C
+George W. Bush
 
-A
-B
+George Washington
+Nelson Rockefeller
 
-A
-D
+Gerald Ford
 
-B
+Henry Wilson
 
-A
+Rutherford B. Hayes
 
-A
+John Tyler
 
-A
+Andrew Johnson
 
-D
+Lyndon B. Johnson
 
-B
+Franklin Pierce
 
-A
-B
-C
+James K. Polk
 
-C
+Warren G. Harding
 
-A
+Franklin Pierce
 
-C
+Benjamin Harrison
 
-B
+William Howard Taft
 
-A
+Richard Nixon
 
-B
+Bill Clinton
 
-B
+William Howard Taft
 
-E
+Martin Van Buren
 
-A
-B
-C
+James K. Polk
+Franklin D. Roosevelt
 
-A
+Henry Wilson
 
-A
-C
-E
+James A. Garfield
 
-A
+Benjamin Harrison
+George Bush
 
-C
+William Henry Harrison
+Warren G. Harding
+Benjamin Harrison
 
-C
+Elbridge Gerry
 
-E
+Andrew Jackson
 
-A
+Harry S. Truman
 
-E
+Lyndon B. Johnson
 
-A
+Warren G. Harding
 
-A
+William McKinley
 
-A
-D
+Bill Clinton
 
-A
+Herbert Hoover
 
-C
+Zachary Taylor
 
-D
+Harry S. Truman
 
-A
+William Howard Taft
 
-A
-C
-D
-E
+Nelson Rockefeller
 
-B
+Henry Wilson
 
-A
+William Howard Taft
 
-C
+George Washington
 
-B
+Nelson Rockefeller
 
-A
-C
+Theodore Roosevelt
 
-A
+Franklin Pierce
 
-A
+Andrew Jackson
 
-A
+Franklin Pierce
 
-A
-B
+James A. Garfield
 
-A
+Barack Obama
 
-D
+Richard Nixon
 
-A
+Hubert Humphrey
 
-A
+Calvin Coolidge
 
-A
+George Clinton
 
-A
+Franklin D. Roosevelt
 
-D
+Bill Clinton
 
-B
+Charles Fairbanks
 
-A
+Thomas Jefferson
 
-A
+Warren G. Harding
