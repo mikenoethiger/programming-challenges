@@ -1,209 +1,223 @@
-mkdir -p out
-g++ -o out/main main.cpp -lm -O2 -std=c++11 -pipe -DONLINE_JUDGE
-out/main < input.txt
-Martin Van Buren
+B
 
-Abraham Lincoln
-Henry Wilson
-Ronald Reagan
+C
 
-Lyndon B. Johnson
+B
 
-Nelson Rockefeller
+A
 
-James A. Garfield
+B
 
-Grover Cleveland
+B
 
-Martin Van Buren
+B
 
-Elbridge Gerry
+B
+C
+D
 
-Richard Nixon
+A
 
-Dwight D. Eisenhower
+A
 
-Ulysses S. Grant
+E
 
-James Madison
+A
 
-James Madison
+A
 
-Grover Cleveland
+B
 
-Henry A. Wallace
+B
 
-Jimmy Carter
+A
 
-Nelson Rockefeller
+B
 
-Richard Nixon
+A
 
-Bill Clinton
+C
 
-Franklin Pierce
+C
 
-George Bush
+C
 
-Ronald Reagan
+C
 
-Henry A. Wallace
+A
 
-Theodore Roosevelt
+B
 
-Alben Barkley
+B
+C
 
-Herbert Hoover
+A
 
-William Howard Taft
+B
 
-Barack Obama
+C
 
-Harry S. Truman
+A
+B
 
-Thomas Jefferson
+C
 
-Hubert Humphrey
+B
 
-Ronald Reagan
+A
 
-Hubert Humphrey
+B
+C
 
-Alben Barkley
+A
 
-John Tyler
+A
 
-Bill Clinton
+A
+D
+E
 
-Nelson Rockefeller
+A
 
-James Monroe
+A
 
-William McKinley
+A
 
-Millard Fillmore
+B
 
-Andrew Jackson
+B
+C
 
-Gerald Ford
+A
 
-James Buchanan
+A
 
-Jimmy Carter
+B
 
-Andrew Johnson
+A
 
-Charles Dawes
+A
+B
 
-George W. Bush
+A
+C
 
-George Washington
-Nelson Rockefeller
+A
+B
 
-Gerald Ford
+A
+D
 
-Henry Wilson
+B
 
-Rutherford B. Hayes
+A
 
-John Tyler
+A
 
-Andrew Johnson
+A
 
-Lyndon B. Johnson
+D
 
-Franklin Pierce
+B
 
-James K. Polk
+A
+B
+C
 
-Warren G. Harding
+C
 
-Franklin Pierce
+A
 
-Benjamin Harrison
+C
 
-William Howard Taft
+B
 
-Richard Nixon
+A
 
-Bill Clinton
+B
 
-William Howard Taft
+B
 
-Martin Van Buren
+E
 
-James K. Polk
-Franklin D. Roosevelt
+A
+B
+C
 
-Henry Wilson
+A
 
-James A. Garfield
+A
+C
+E
 
-Benjamin Harrison
-George Bush
+A
 
-William Henry Harrison
-Warren G. Harding
-Benjamin Harrison
+C
 
-Elbridge Gerry
+C
 
-Andrew Jackson
+E
 
-Harry S. Truman
+A
 
-Lyndon B. Johnson
+E
 
-Warren G. Harding
+A
 
-William McKinley
+A
 
-Bill Clinton
+A
+D
 
-Herbert Hoover
+A
 
-Zachary Taylor
+C
 
-Harry S. Truman
+D
 
-William Howard Taft
+A
 
-Nelson Rockefeller
+A
+C
+D
+E
 
-Henry Wilson
+B
 
-William Howard Taft
+A
 
-George Washington
+C
 
-Nelson Rockefeller
+B
 
-Theodore Roosevelt
+A
+C
 
-Franklin Pierce
+A
 
-Andrew Jackson
+A
 
-Franklin Pierce
+A
 
-James A. Garfield
+A
+B
 
-Barack Obama
+A
 
-Richard Nixon
+D
 
-Hubert Humphrey
+A
 
-Calvin Coolidge
+A
 
-George Clinton
+A
 
-Franklin D. Roosevelt
+A
 
-Bill Clinton
+D
 
-Charles Fairbanks
+B
 
-Thomas Jefferson
+A
 
-Warren G. Harding
+A

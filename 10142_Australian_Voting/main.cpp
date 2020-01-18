@@ -166,13 +166,20 @@ int scan_ballots(int n_candidates) {
 }
 
 int main() {
-	int cases, i, j;
+	int cases, i, j, ni;
 	scanf("%d\n", &cases);
 
 	for (i = 0; i < cases; i++) {
 		scanf("%d\n", &ct);
 		for (j = 0; j < ct; j++) {
-			scanf("%[a-zA-Z .]\n", candidate_names[j]);
+			ni = 0;
+			scanf("%c", candidate_names[j]);
+			while (candidate_names[j][ni] != '\n') {
+				ni++;
+				scanf("%c", candidate_names[j] + ni);
+			}
+			candidate_names[j][ni] = '\0';
+//			scanf("%[a-zA-Z .]\n", candidate_names[j]);
 		}
 		bt = scan_ballots(ct);
 //		l = bt % 2 == 0 ? bt / 2 : bt / 2 + 1;
