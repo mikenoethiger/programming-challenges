@@ -10,5 +10,5 @@ main2:
 
 main3:
 	mkdir -p out
-	g++ -o out/main3 main3.c
-	out/main3 < input2.txt
+	gcc -o out/main3 -lm -O2 -pipe -ansi -DONLINE_JUDGE main3.c
+	out/main3 < input.txt

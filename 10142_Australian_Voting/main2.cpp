@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <limits.h>
 #include <unistd.h>
-#include <vector>
+#include <cstring>
 
 #define WINNER 1
 #define ELIMINATED 2
@@ -37,7 +37,6 @@ int w;
 void vote(int b, int c) {
 	candidates[c][0]++;
 	ballots[b][20] = c; // propably obsolete
-//	printf("b=%d c=%d\n", b, c);
 	candidates_b[c][candidates_b[c][1000]] = b;
 	candidates_b[c][1000]++;
 	if (candidates[c][0] >= l) {
@@ -127,16 +126,8 @@ void solve() {
 					int k = 1;
 					int b = candidates_b[i][j];
 					while (candidates[ballots[b][k]][1] >= ELIMINATED && k < ct) k++;
-//					printf("bt=%d k=%d ballots[b][k-1]=%d ", bt, k, ballots[b][k-1]);
 					if (k < ct) vote(b, ballots[b][k]);
 				}
-//				for (j = 0; j < bt; j++) {
-//					if (ballots[j][20] == i) {
-//						int k = 1;
-//						while (candidates[ballots[j][k]][1] >= ELIMINATED && k < ct) k++;
-//						if (k < ct) vote(j, ballots[j][k]);
-//					}
-//				}
 				candidates[i][1] = ELIMINATED_PROCESSED;
 			}
 		}
