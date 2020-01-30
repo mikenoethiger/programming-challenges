@@ -2,14 +2,7 @@
 #include <stdlib.h>
 
 /*
- * A program for fast exponentiation.
- * Usage: fexp a x [m]
- *   a := base
- *   x := exponent
- *   m := modular divisor (optional)
- *
- * DESCRIPTION
- * 	calculates a^x [mod m] in O(log x)
+ * A program that calculate a^x or a^x mod m in O(log n)
  */
 
 void print_usage() {

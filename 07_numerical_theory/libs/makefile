@@ -7,3 +7,8 @@ fact:
 	mkdir -p out
 	gcc -o out/fact fact.c
 	out/fact 199429
+
+tau:
+	mkdir -p out
+	gcc -o out/tau tau.c
+	out/tau 199429
