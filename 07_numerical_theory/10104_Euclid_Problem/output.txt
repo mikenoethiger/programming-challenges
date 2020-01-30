@@ -1,0 +1,8 @@
+mkdir -p out
+gcc -o out/main main.c
+out/main < input.txt
+0 1 5
+17 -27 1
+-5 1 1
+-21072 193 1
+-20 1 5
