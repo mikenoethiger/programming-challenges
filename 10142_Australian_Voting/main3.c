@@ -43,7 +43,9 @@ int ballots[1000][20];
 int cn, bn, l, wi;
 
 clock_t start, end;
-double time_read = 0;
+clock_t start1, end1;
+double time_read_names = 0;
+double time_read_numbers = 0;
 double time_algo = 0;
 
 /* UTILITY */
@@ -153,6 +155,7 @@ void solve() {
 }
 
 int scan_ballots() {
+	start = clock();
 	// i  := running index
 	// bi := ballot index
 	// n  := line breaks counter
@@ -172,6 +175,8 @@ int scan_ballots() {
 		}
 		bi++;
 	}
+	end = clock();
+	time_read_numbers += end-start;
 	return bi;
 }
 
@@ -184,15 +189,16 @@ int main() {
 		for (j = 0; j < cn; j++) {
 			fgets(candidate_names[j], 81, stdin);
 		}
+		end = clock();
+		time_read_names += end-start;
 		bn = scan_ballots();
 		l = bn / 2 + 1;
 		wi = 0;
-		end = clock();
-		time_read += end-start;
 		solve();
 		if (i < cases-1) printf("\n");
 	}
-	printf("time_read=%f\n", (double) time_read / CLOCKS_PER_SEC);
+	printf("time_read_names=%f\n", (double) time_read_names / CLOCKS_PER_SEC);
+	printf("time_read_numbers=%f\n", (double) time_read_numbers / CLOCKS_PER_SEC);
 	printf("time_algo=%f\n", (double) time_algo / CLOCKS_PER_SEC);
 	return 0;
 }

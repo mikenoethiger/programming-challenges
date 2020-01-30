@@ -58,6 +58,9 @@ void print_votes() {
 	sleep(1);
 }
 
+/**
+ * O(1)
+ */
 void check_tied() {
 	int i;
 	int tied_score = -1;
@@ -81,6 +84,17 @@ void check_tied() {
 
 /**
  * Finds the winning candidate(s).
+ *
+ * The run time complexity is constant O(1), since both, the candidates and
+ * the ballots scale only up to a limit (20 and 1000 respectively).
+ *
+ * To give a more precise upper bound, it is around O(400'000'000), which is
+ * when no loop ever terminates early (which is very unlikely).
+ *
+ * Reducing the constant upper bound using more extensive caching, by storing
+ * all ballots who voted for a candidate (see main2.cpp) did actually bring a
+ * negligible run time improvement. Further investigation showed, that 90%
+ * of the run time was consumed by reading the input (see main4.c)
  */
 void solve() {
 	int i, j;
@@ -99,17 +113,21 @@ void solve() {
 
 	int min;
 	int it = 2;
+	// at most 20 while runs (max amount of candidates)
 	while (w <= 0) {
 		min = INT_MAX;
 		// evaluate min votes
+		// worst case time: O(20)
 		for (i = 0; i < ct; i++) {
 			if (candidates[i][1] < ELIMINATED && candidates[i][0] < min) min = candidates[i][0];
 		}
 		// eliminated min candidate(s)
+		// worst case time: O(20)
 		for (i = 0; i < ct; i++) {
 			if (candidates[i][0] == min) candidates[i][1] = ELIMINATED;
 		}
 		// re-vote for eliminated candidates
+		// worst case time: O(20*1000*1000)
 		for (i = 0; i < ct; i++) {
 			if (candidates[i][1] == ELIMINATED) {
 				for (j = 0; j < bt; j++) {
@@ -122,6 +140,7 @@ void solve() {
 				candidates[i][1] = ELIMINATED_PROCESSED;
 			}
 		}
+		// O(1)
 		check_tied();
 		it++;
 	}

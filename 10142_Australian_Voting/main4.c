@@ -1,12 +1,21 @@
 #include <stdio.h>
 #include <limits.h>
 #include <unistd.h>
-#include <cstring>
+#include <strings.h>
 #include <stdbool.h>
+#include <time.h>
 
 #define WINNER 1
 #define ELIMINATED 2
 #define ELIMINATED_PROCESSED 3
+
+/* I tried to analyze the execution time of this algorithm.
+ * Experiments showed, that for an input of 800 votings:
+ * - Time to read input: 0.089923s
+ * - Time to solve and print solution: 0.006333s
+ * Which means reading the input makes 90% of the time consumption.
+ * Unfortunately I could not find a more efficient way to read the input.
+ */
 
 /* DATA STRUCTURE */
 
@@ -32,6 +41,12 @@ int ballots[1000][20];
 // l  := winner limit, i.e. number of votes to reach in order to win election
 // wi := number of winners
 int cn, bn, l, wi;
+
+clock_t start, end;
+clock_t start1, end1;
+double time_read_names = 0;
+double time_read_numbers = 0;
+double time_algo = 0;
 
 /* UTILITY */
 
@@ -91,6 +106,7 @@ void check_tied() {
  * Finds the winning candidate(s).
  */
 void solve() {
+	start = clock();
 	int i, j;
 
 	// clear candidates and ballots_c cache
@@ -134,45 +150,101 @@ void solve() {
 			printf("%s", candidate_names[i]);
 		}
 	}
+	end = clock();
+	time_algo += end-start;
+}
+
+char r_buf;
+
+int read_num(int *num) {
+	*num = 0;
+//	while (read(STDIN_FILENO, &r_buf, 1)) {
+	while (read(STDIN_FILENO, &r_buf, 1)) {
+		if (!('0' <= r_buf && r_buf <= '9')) break;
+		*num *= 10;
+		*num += r_buf - '0';
+	}
+	return *num;
 }
 
 int scan_ballots() {
+	start = clock();
 	// i  := running index
 	// bi := ballot index
 	// n  := line breaks counter
 	int i, bi, n;
 	bi = 0;
+	i = 0;
 	n = 1;
-	while (n == 1) {
+	bool go_on = true;
+	while (go_on) {
 		for (i = 0; i < cn; i++) {
-			if (scanf("%d", ballots[bi] + i) == EOF) {
-				bi--; n = 2;
+			if (read_num(ballots[bi] + i) == 0) {
+				go_on = false;
 				break;
 			}
-			// count white spaces / line breaks
-			scanf(" %n", &n);
-			if (n > 1) break;
 			ballots[bi][i]--;
+//			printf("%d ", ballots[bi][i]);
 		}
+//		printf("\n");
 		bi++;
 	}
+	bi--;
+	end = clock();
+	time_read_numbers += end-start;
 	return bi;
 }
 
-int main() {
-	int cases, i, j, ni;
-	scanf("%d\n", &cases);
 
-	for (i = 0; i < cases; i++) {
-		scanf("%d\n", &cn);
-		for (j = 0; j < cn; j++) {
-			fgets(candidate_names[j], 81, stdin);
-		}
-		bn = scan_ballots();
-		l = bn / 2 + 1;
-		wi = 0;
-		solve();
-		if (i < cases-1) printf("\n");
+
+//int read_num(char *buf, ssize_t size, int *num) {
+//	*num = 0;
+//	int bytes = 0;
+//	while ('0' <=  buf[bytes] && buf[bytes] <= '9') {
+//		*num *= 10;
+//		*num += buf[bytes] - '0';
+//		bytes++;
+//	}
+//	return bytes;
+//}
+
+//int read_stdin(char *buf) {
+//
+//}
+
+char large[6000000];
+
+int main() {
+	start = clock();
+	ssize_t offset = 0;
+	ssize_t buf = 0;
+	while ((buf = read(STDIN_FILENO, large+offset, 10000))) {
+		offset += buf;
 	}
+	end = clock();
+	printf("read %ld bytes\n", offset);
+	printf("time: %f\n", ((double)end-start)/CLOCKS_PER_SEC);
+//	int cases, i, j, ni;
+//	scanf("%d\n", &cases);
+//	for (i = 0; i < cases; i++) {
+////		printf("case %d\n", i);
+//		start = clock();
+//		scanf("%d\n", &cn);
+//		for (j = 0; j < cn; j++) {
+//			fgets(candidate_names[j], 81, stdin);
+////			printf("%s\n", candidate_names[j]);
+//		}
+//		end = clock();
+//		time_read_names += end-start;
+//		bn = scan_ballots();
+////		printf("bn=%d\n", bn);
+//		l = bn / 2 + 1;
+//		wi = 0;
+////		solve();
+////		if (i < cases-1) printf("\n");
+//	}
+//	printf("time_read_names=%f\n", (double) time_read_names / CLOCKS_PER_SEC);
+//	printf("time_read_numbers=%f\n", (double) time_read_numbers / CLOCKS_PER_SEC);
+//	printf("time_algo=%f\n", (double) time_algo / CLOCKS_PER_SEC);
 	return 0;
 }

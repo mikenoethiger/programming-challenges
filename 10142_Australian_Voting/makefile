@@ -12,3 +12,8 @@ main3:
 	mkdir -p out
 	gcc -o out/main3 -lm -O2 -pipe -ansi -DONLINE_JUDGE main3.c
 	out/main3 < input.txt
+
+main4:
+	mkdir -p out
+	gcc -o out/main4 -lm -O2 -pipe -ansi -DONLINE_JUDGE main4.c
+	out/main4 < input.txt
