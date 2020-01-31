@@ -1,3 +1,13 @@
 mkdir -p out
-gcc -o out/main -lm -O2 -pipe -ansi -DONLINE_JUDGE main.c
-out/main < input.txt
+gcc -o out/main2 -lm -O2 -pipe -ansi -DONLINE_JUDGE main2.c
+out/main2 < input.txt
+512 does not divide 10!
+256 divides 10!
+5040 divides 7!
+2147483647 divides 2147483647!
+2147483647 does not divide 2147483646!
+2147483646 divides 331!
+1 divides 0!
+5 does not divide 0!
+0 divides 1!
+0 divides 2147483647!
