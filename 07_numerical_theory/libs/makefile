@@ -17,3 +17,8 @@ isprim:
 	mkdir -p out
 	gcc -o out/isprim isprim.c
 	out/isprim 199429
+
+carmichael:
+	mkdir -p out
+	gcc -o out/carmichael carmichael.c
+	out/carmichael -r 560 570
