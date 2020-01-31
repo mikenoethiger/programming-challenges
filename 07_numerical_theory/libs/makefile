@@ -12,3 +12,8 @@ tau:
 	mkdir -p out
 	gcc -o out/tau tau.c
 	out/tau 199429
+
+isprim:
+	mkdir -p out
+	gcc -o out/isprim isprim.c
+	out/isprim 199429
