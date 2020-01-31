@@ -27,7 +27,10 @@ void solve(long_t n) {
 	i = 3;
 	cnt = 0;
 	while (i < sqrt(n)+1) {
-		for (;n % i == 0; cnt++, n /= i){}
+		while (n % i == 0) {
+			cnt++;
+			n /= i;
+		}
 		if (cnt > 0) {
 			d *= (cnt+1);
 		}

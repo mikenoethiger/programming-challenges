@@ -3,10 +3,14 @@ Links:
 * [Divisor function](https://en.wikipedia.org/wiki/Divisor_function)
 * [Divisors Calculator](https://www.hackmath.net/en/calculator/divisors?n=1426539184&submit=Calculate)
 * [Number of Divisors](https://primes.utm.edu/glossary/page.php?sort=tau)
-
+* [Carmichael numbers](https://primes.utm.edu/glossary/page.php?sort=CarmichaelNumber)
 
 
 # Zahlentheorie
+
+Relatively Prime
+
+	Two integers are relatively prime (or coprime) if there is no integer greater than one that divides them both (that is, their greatest common divisor is one). For example, 12 and 13 are relatively prime, but 12 and 14 are not.
 
 Modulo Sätze
 
@@ -23,17 +27,33 @@ Kongruenz Sätze
 
 Definition Teilbarkeit
 
-	a|b := b = q * a (q eine ganze Zahl)
+	a|b := b=q*a (q∈ℤ)
 
 Teilbarkeits Sätze
 
-	1. a|0 (jede Zahl teilt 0)
-	2. a|b => a|-b 
-	3. (3|6, 3|-6, -3|6, -3|-6)
-	4. a|b und a|b' => a|b+b' und a|b-b'
-	5. a|b => a|bc
-	6. a|b => |a| = |b| oder |a| < |b|/2
-	7. a|b => a <= b
+	a|0 (jede Zahl teilt 0)
+	a|b => a|-b
+	(3|6, 3|-6, -3|6, -3|-6)
+	a|b und a|c => a|b+c 
+	               => a|b-c
+	               => a|s*b + t*c
+	  weil b=q*a, c=r*a => b+c = q*a + r*a = a*(q+r)
+	a|b => a|bc
+	a|b => |a| = |b| oder |a| < |b|/2
+	a|b => a <= b
+
+Definition ggT
+
+	ggT(a,b) = T(a) ∩ T(b)
+	T(n) := Menge aller Teiler von n
+
+ggT Sätze
+
+	ggT(a,a) = a           weil T(a) ∩ T(a) = T(a) 
+	ggT(a,1) = 1           weil T(a) ∩ T(1) = {1}
+	ggT(a,0) = a           weil T(a) ∩ ℕ = T(a)
+	ggT(a,b) = ggT(b,a)    weil Schnittmengen Kommutativ
+	ggT(a,b) = ggT(a-b, b) weil ggt(a,b)|a ∧ ggT(a,b)|b => ggT(a,b)|a-b (siehe Beweis Teilbarkeitssätze)
 
 Primzahlsatz
 
