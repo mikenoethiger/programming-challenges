@@ -1,3 +1,6 @@
+mkdir -p out
+gcc -o out/main -lm -O2 -pipe -ansi -DONLINE_JUDGE main.c
+out/main < input.txt
 3 is normal.
 4 is normal.
 5 is normal.

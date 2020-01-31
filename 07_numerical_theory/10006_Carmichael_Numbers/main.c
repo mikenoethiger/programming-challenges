@@ -1,72 +1,85 @@
 #include <stdio.h>
 #include <math.h>
+#include <stdbool.h>
 
 typedef unsigned long long_t;
 
+bool korselt_test(int n) {
+	// Satz von Korselt https://de.wikipedia.org/wiki/Carmichael-Zahl#Satz_von_Korselt
+	// Eine natürliche Zahl n ist genau dann eine Carmichael-Zahl,
+	// wenn sie nicht prim und quadratfrei ist und für alle ihre
+	// Primteiler p gilt, dass p-1 die Zahl n-1 teilt.
 
-/**
- * O(log n)
- *
- * @param a
- * @param x
- * @param m
- * @return
- */
-long_t modexp(long_t a, long_t x, long_t m) {
-	long_t res = 1;
-	while (x > 0) {
-		// if LSB is a 1
-		if (x & 1) res = (res * a) % m;
-		// check next bit
-		x >>= 1;
-		a = (a * a) % m;
+	// k  := temp counter
+	// kp := prime numbers counter
+	// on := original n
+	// i  := running number
+	// lp := last prime number (cache)
+	int k, kp;
+	int on, i, lp;
+
+	k = 0;
+	kp = 0;
+	on = n;
+
+	// find even divisors
+	while (n % 2 == 0) {
+		k++; kp++;
+		n /= 2;
 	}
-	return res;
-}
+	// n is not square free
+	if (k > 1) return false;
 
-// from libs/tau.c
-int tau(int n) {
-	int d, i, cnt;
-	d = 1;
-	cnt = 0;
-
-	for(;n%2 == 0; n/=2, cnt++) {}
-	d *= (cnt+1);
-
+	// find odd divisors
 	i = 3;
-	cnt = 0;
+	k = 0;
 	while (i < sqrt(n)+1) {
-		for (;n % i == 0; cnt++, n/= i){}
-		if (cnt > 0) d *= (cnt+1);
-		i += 2;
-		cnt = 0;
-	}
-	if (n > 1) d *= 2;
-	return d;
-}
-
-void solve(int n) {
-	long_t i;
-	int is_carmichael = 1;
-	int eq_true = 1;
-	for (i = 2; i < n; i++) {
-		long_t res = modexp(i, n, n);
-		if (res != i) {
-			eq_true = 0;
-			break;
+		if (k > 0) {
+			// i is multiple prime factor of n
+			// thus n is not square free
+			if (k > 1) return false;
+			// Satz von Korselt
+			if ((on-1) % (i-1) != 0) return false;
+		}
+		if (n % i == 0) {
+			k++; kp++; lp = i;
+			n /= i;
+		} else {
+			// i is prime factor of n
+			i += 2;
+			k = 0;
 		}
 	}
-	if (eq_true && tau(n) > 2) {
-		printf("The number %d is a Carmichael number.\n", n);
-	} else {
-		printf("%d is normal.\n", n);
+	// check again, otherwise we might miss the last prime number
+	// from the loop above
+	if (k > 0) {
+		if (k > 1) return false;
+		if ((on-1) % (i-1) != 0) return false;
 	}
+
+	// n > 1 => remaining number is a prime number too
+	if (n > 1) {
+		// n is not square free
+		if (n == lp) return false;
+		if ((on-1) % (n-1) != 0) return false;
+		kp++;
+	}
+
+	// n is prime thus by definition not carchmichael
+	if (kp == 1) return false;
+
+	return true;
 }
 
 int main() {
 	int n;
 	while (scanf("%d", &n) && n) {
-		solve(n);
+		if (korselt_test(n)) {
+			printf("The number %d is a Carmichael number.\n", n);
+		} else {
+			printf("%d is normal.\n", n);
+		}
 	}
+
 	return 0;
 }
