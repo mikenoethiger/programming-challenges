@@ -22,3 +22,8 @@ carmichael:
 	mkdir -p out
 	gcc -o out/carmichael carmichael.c
 	out/carmichael -r 560 570
+
+sieve:
+	mkdir -p out
+	gcc -o out/sieve sieve.c
+	out/sieve -q 100

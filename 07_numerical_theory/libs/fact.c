@@ -48,7 +48,7 @@ void factorize(unsigned long n, long *factors, size_t *n_factors) {
 	}
 
 	// find odd divisors
-	// O(sqrt(n)/2) = O(sqrt(n))
+	// sqrt(n)/2 => O(sqrt(n))
 	i = 3;
 	while (i < sqrt(n)+1) {
 		if (n % i == 0) {
