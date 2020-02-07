@@ -3,6 +3,8 @@
 #include <math.h>
 #include <limits.h>
 #include <time.h>
+#include <unistd.h>
+#include <stdbool.h>
 
 #define N_FACTORS 1000000
 
@@ -11,11 +13,25 @@
  * of a given integer n.
  */
 
+/* options */
+bool o_help = false;
+bool o_range = false;
+char o_delimiter = ' ';
+
+/* data types */
+typedef unsigned long long_t;
+
 void print_usage() {
-	printf("Usage: fact n\n");
-	printf("    n := number to factorize\n");
+	printf("Usage: fact [-h] [-r] n1 [n2 ...]\n");
+	printf("    ni  number(s) to factorize\n");
+	printf("    -h  show usage\n");
+	printf("    -r  (range) factorize all numbers from 1..n1 or n1..n2\n");
+	printf("    -d  delimiter to print between factors (default is white space).\n");
+	printf("        Some delimiters need to be escaped otherwise they have specific meaning to bash, e.g '*'.\n");
+	printf("\n");
 	printf("DESCRIPTION\n");
 	printf("    Prints the prime factorization of a given number n.\n");
+	printf("    Runs in O(sqrt(n)).\n");
 }
 
 /**
@@ -36,9 +52,9 @@ void print_usage() {
  * @param factors array that will be filled with the factors
  * @param n_factors will contain the number of factors
  */
-void factorize(unsigned long n, long *factors, size_t *n_factors) {
+void factorize(long_t n, long_t *factors, size_t *n_factors) {
 	int k = 0;
-	long i;
+	long_t i;
 
 	// find even divisors
 	// O(log n)
@@ -64,37 +80,88 @@ void factorize(unsigned long n, long *factors, size_t *n_factors) {
 	*n_factors = k;
 }
 
-int main(int argc, char *argv[]) {
-
-	if (argc != 2) {
-		print_usage();
-		return -1;
-	}
-
-	long n;
-
-	long factors[N_FACTORS];
-	size_t n_factors, i;
-	clock_t start, end;
-
-	n = atol(argv[1]);
-	printf("factorize %ld\n", n);
-
-	start = clock();
-	factorize(n, factors, &n_factors);
-	end = clock();
-
+void print_factors(long_t n, long_t *factors, size_t n_factors) {
+	long_t i;
 	if (n_factors == 1) {
 		printf("%ld is prime\n", n);
 	} else {
-		printf("%ld prime factors\n", n_factors);
+		printf("%ld = ", n);
 		for (i = 0; i < n_factors; i++) {
-			printf("%ld ", factors[i]);
+			printf("%ld", factors[i]);
+			if (i < n_factors-1) printf("%c", o_delimiter);
 		}
 		printf("\n");
 	}
+}
 
-	printf("(%f seconds)\n", ((double)end-start)/CLOCKS_PER_SEC);
+void parse_opt(int argc, char *argv[]) {
+	int opt;
+	while ((opt = getopt(argc, argv, "hrd:")) != -1) {
+		switch (opt) {
+			case 'h':
+				o_help = true;
+				break;
+			case 'r':
+				o_range = true;
+				break;
+			case 'd':
+				o_delimiter = optarg[0];
+				break;
+			default:
+				print_usage();
+				exit(EXIT_FAILURE);
+		}
+	}
+}
+
+int main(int argc, char *argv[]) {
+	parse_opt(argc, argv);
+	if (o_help) {
+		print_usage();
+		exit(0);
+	}
+	if (argc-optind < 1) {
+		print_usage();
+		exit(EXIT_FAILURE);
+	}
+
+	long_t n;
+	long_t factors[N_FACTORS];
+	long_t n_factors, i;
+	clock_t start, end;
+	long_t r_start, r_end;
+	int r_offset;
+	int opt = optind;
+
+	if (argc-opt == 1) {
+		r_start = 1;
+		r_end = atol(argv[opt]);
+		r_offset = 1;
+	} else {
+		r_start = atol(argv[opt]);
+		r_end = atol(argv[opt+1]);
+		r_offset = 2;
+	}
+
+	start = clock();
+
+	if (o_range) {
+		for (i = r_start; i <= r_end; i++) {
+			factorize(i, factors, &n_factors);
+			print_factors(i, factors, n_factors);
+		}
+		opt += r_offset;
+	}
+
+	for (i = opt; i < argc; i++) {
+		n = atol(argv[i]);
+		factorize(n, factors, &n_factors);
+		print_factors(n, factors, n_factors);
+	}
+
+	end = clock();
+
+	printf("%f ms\n", ((double)end-start)/CLOCKS_PER_SEC*1000);
 
 	return 0;
 }

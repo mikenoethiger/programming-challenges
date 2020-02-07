@@ -14,7 +14,6 @@
  * applying sieve of eratosthenes.
  */
 
-
 /* options */
 bool o_help = false;
 bool o_quiet = false;
