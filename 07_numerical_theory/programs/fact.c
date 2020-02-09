@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 
+#define PROG_NAME "fact"
 #define N_FACTORS 1000000
 #define NEW_LINE 'n'
 
@@ -25,7 +26,7 @@ char o_delimiter = ' ';
 typedef unsigned long long_t;
 
 void print_usage() {
-	printf("Usage: fact [-h] [-H] [-d char] n1 [n2 ...]\n");
+	printf("Usage: %S [-h] [-H] [-d char] n1 [n2 ...]\n", PROG_NAME);
 	printf("    ni  Numbers to perform prime factorization on. Alternatively these numbers can be provided via stdin.\n");
 	printf("    -h  Show usage.\n");
 	printf("    -H  Print results in a human readable format.\n");
