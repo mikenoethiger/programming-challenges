@@ -4,12 +4,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+/*
+ * Primality test program O(sqrt n).
+ */
+
+/* data types */
 typedef unsigned long long_t;
 
-/*
- * A program that checks whether a given number
- * n is prime.
- */
+/* options */
+bool o_help = false;
+bool o_human_readable = false;
+bool o_range = false;
 
 void print_usage() {
 	printf("Usage: isprim [-h] [-r] n1 [n2 ...]\n");
@@ -18,20 +23,20 @@ void print_usage() {
 	printf("    -r  check all numbers between n1 and n2 for primality\n");
 	printf("\n");
 	printf("DESCRIPTION\n");
-	printf("    Checks whether a given number is prime in O(sqrt(n)).\n");
-	printf("    Certainty is 100 percent.\n");
+	printf("    Primality test for a given number with 100%% certainty.\n");
+	printf("    Time Complexity: O(sqrt n).\n");
 }
+
+/* algorithm */
 
 bool is_prime(long_t n) {
 	if (n == 0 || n == 1) return false;
 	if (n == 2) return true;
-	if (n % 2 == 0) return false;
+	if (!(n & 1)) return false;
 
 	long_t i;
 
-	// first divisor below sqrt(n) implies
-	// a second divisor above sqrt(n) which
-	// implies n is not prime
+	// first divisor below sqrt(n) implies a second divisor above sqrt(n) which implies n is not prime
 	i = 3;
 	while (i < sqrt(n)+1) {
 		if (n % i == 0) {
@@ -43,6 +48,8 @@ bool is_prime(long_t n) {
 	return true;
 }
 
+/* program glue/shell */
+
 void prim_test(long_t n) {
 	if (is_prime(n)) {
 		printf("%ld is prim\n", n);
@@ -51,18 +58,27 @@ void prim_test(long_t n) {
 	}
 }
 
-bool o_help = false;
-bool o_range = false;
+void print_results(long_t n, bool prime) {
+	if (o_human_readable) {
+		if (prime) {
+			printf("%ld=prim\n", n);
+		} else {
+			printf("%ld=comp\n", n);
+		}
+	} else {
+		printf("%d ", prime ? 1 : 0);
+	}
+}
 
 void parse_opt(int argc, char *argv[]) {
 	int opt;
-	while ((opt = getopt(argc, argv, "hr")) != -1) {
+	while ((opt = getopt(argc, argv, "hH")) != -1) {
 		switch (opt) {
 			case 'h':
 				o_help = true;
 				break;
-			case 'r':
-				o_range = true;
+			case 'H':
+				o_human_readable = true;
 				break;
 			default:
 				print_usage();
@@ -77,29 +93,33 @@ int main(int argc, char *argv[]) {
 		print_usage();
 		exit(0);
 	}
-	if (argc-optind < 1) {
-		print_usage();
-		return -1;
-	}
-	if (o_range && argc-optind < 2) {
-		print_usage();
-		return -1;
-	}
 
-	long_t i1,i2;
-	long_t p;
+	// n     := primality test number
+	// argc2 := number of arguments after options have been processed
+	// sr    := scanf function result
+	// buf   := char buffer used for scanf
+	long_t n;
+	int argc2, sr;
+	char buf;
 
-	if (o_range) {
-		i1 = atol(argv[optind]);
-		i2 = atol(argv[optind+1]);
-		for (; i1 <= i2; i1++) {
-			prim_test(i1);
-		}
+	argc2 = argc-optind;
+
+	if (argc2 < 1) {
+		// read arg(s) from stdin
+		do {
+			sr = scanf("%ld%c", &n, &buf);
+			if (sr < 2) break; // indicates no number matched
+			print_results(n, is_prime(n));
+		} while (sr != EOF && buf != '\n');
 	} else {
-		for (i1 = optind; i1 < argc; i1++) {
-			prim_test(atol(argv[i1]));
+		while (optind < argc) {
+			n = atol(argv[optind]);
+			print_results(n, is_prime(n));
+			optind++;
 		}
 	}
+
+	printf("\n");
 
 	return 0;
 }

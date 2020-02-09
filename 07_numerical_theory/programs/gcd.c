@@ -15,9 +15,9 @@ typedef unsigned long long_t;
 
 void print_usage() {
 	printf("Usage: gcd [-h] [-H] n1 n2 [n3 n4 ...]\n");
-	printf("    ni, ni+1  Number pair(s) to find greatest common divisor. The amount of numbers supplied must be even.\n");
+	printf("    ni, ni+1  Sequence pair(s) to find greatest common divisor. The number of arguments provided must be even.\n");
 	printf("              n1 and n2 is the first pair, n3 and n4 the second and so forth. Alternatively the arguments\n");
-	printf("              can be supplied via stdin.\n");
+	printf("              can be provided via stdin.\n");
 	printf("    -h        Show usage.\n");
 	printf("    -H        Print results in a human readable format.\n");
 	printf("\n");
@@ -61,7 +61,7 @@ long_t gcd(long_t a, long_t b) {
 
 void print_result(long_t a, long_t b, long_t gcd) {
 	if (o_human_readable) {
-		printf("gcd(%ld,%ld)=%ld ", a, b, gcd);
+		printf("gcd(%ld,%ld)=%ld\n", a, b, gcd);
 	} else {
 		printf("%ld ", gcd);
 	}
