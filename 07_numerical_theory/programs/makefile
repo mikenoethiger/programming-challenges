@@ -27,3 +27,8 @@ sieve:
 	mkdir -p out
 	gcc -o out/sieve sieve.c
 	out/sieve -q 100
+
+gcd:
+	mkdir -p out
+	gcc -o out/gcd gcd.c
+	out/gcd 4 6
