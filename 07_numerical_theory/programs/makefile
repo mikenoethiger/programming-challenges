@@ -32,3 +32,13 @@ gcd:
 	mkdir -p out
 	gcc -o out/gcd gcd.c
 	out/gcd 4 6
+
+stretch:
+	mkdir -p out
+	gcc -o out/stretch stretch.c
+	out/stretch 10 20
+
+test:
+	mkdir -p out
+	gcc -o out/test test.c
+	out/test
