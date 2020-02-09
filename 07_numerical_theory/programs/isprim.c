@@ -17,10 +17,13 @@ bool o_human_readable = false;
 bool o_range = false;
 
 void print_usage() {
-	printf("Usage: isprim [-h] [-r] n1 [n2 ...]\n");
-	printf("    ni  number(s) to check for primality\n");
-	printf("    -h  show usage\n");
-	printf("    -r  check all numbers between n1 and n2 for primality\n");
+	printf("Usage: isprim [-h] [-H] n1 [n2 ...]\n");
+	printf("    ni  Primality test numbers. Alternatively these numbers can be provided via stdin.\n");
+	printf("    -h  Show usage\n");
+	printf("    -H  Print results in a human readable format\n");
+	printf("\n");
+	printf("AUTHORS\n");
+	printf("    Mike Noethiger (noethiger.mike@gmail.com)\n");
 	printf("\n");
 	printf("DESCRIPTION\n");
 	printf("    Primality test for a given number with 100%% certainty.\n");
