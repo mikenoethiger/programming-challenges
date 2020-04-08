@@ -7,7 +7,6 @@
 #define ELIMINATED 2
 #define ELIMINATED_PROCESSED 3
 
-
 // ballots       := candidate indexes ordered by voting priority
 // ballots[20]   := last vote of this ballot (i.e. a candidate)
 // candidates    := information about each candidate

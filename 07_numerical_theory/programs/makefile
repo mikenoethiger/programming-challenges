@@ -42,3 +42,8 @@ test:
 	mkdir -p out
 	gcc -o out/test test.c
 	out/test
+
+getopt:
+	mkdir -p out
+	gcc -o out/getopt getopt.c
+	out/getopt

@@ -31,7 +31,7 @@ void print_usage() {
 
 /* algorithm */
 
-long_t gcd(long_t a, long_t b) {
+long_t gcd(long_t a, long_t b, long_t *f1, long_t *f2) {
 	long_t ai, bi, a1, a2, b1, b2, f, d;
 	ai = a;
 	bi = b;
@@ -51,17 +51,21 @@ long_t gcd(long_t a, long_t b) {
 		}
 	}
 	if (a > b) {
+		*f1 = a1;
+		*f2 = a2;
 		return a;
 	} else {
+		*f1 = b1;
+		*f2 = b2;
 		return b;
 	}
 }
 
 /* program glue/shell */
 
-void print_result(long_t a, long_t b, long_t gcd) {
+void print_result(long_t a, long_t b, long_t gcd, long_t f1, long_t f2) {
 	if (o_human_readable) {
-		printf("gcd(%ld,%ld)=%ld\n", a, b, gcd);
+		printf("gcd(%ld,%ld) = %ld = %ld %ld + %ld %ld\n", a, b, gcd, f1, a, f2, b);
 	} else {
 		printf("%ld ", gcd);
 	}
@@ -101,7 +105,7 @@ int main(int argc, char *argv[]) {
 	// i   := running index
 	// m   := number of input items matched by scanf
 	// buf := buffer used to scan a character
-	long_t a, b, c;
+	long_t a, b, c, f1, f2;
 	size_t i;
 	int m;
 	char buf;
@@ -111,15 +115,15 @@ int main(int argc, char *argv[]) {
 		for (i = optind; i < argc; i += 2) {
 			a = atoi(argv[i]);
 			b = atoi(argv[i+1]);
-			c = gcd(a, b);
-			print_result(a, b, c);
+			c = gcd(a, b, &f1, &f2);
+			print_result(a, b, c, f1, f2);
 		}
 	} else {
 		// input via stdin
 		do {
 			m = scanf("%ld%ld%c", &a, &b, &buf);
-			c = gcd(a, b);
-			print_result(a, b, c);
+			c = gcd(a, b, &f1, &f2);
+			print_result(a, b, c, f1, f2);
 		} while (m != EOF && buf != '\n');
 	}
 	printf("\n");

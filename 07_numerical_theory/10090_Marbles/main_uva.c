@@ -2,15 +2,6 @@
 
 typedef long long_t;
 
-/**
- * Finds ggT(n1,n2) such that f1*n1 + f2*n2 = ggT(n1,n2)
- *
- * @param n1
- * @param n2
- * @param f1 output parameter, co factor of n1
- * @param f2 output parameter, co factor of n2
- * @param ggt output parameter equal to ggT(n1,n2)
- */
 void ggt(long_t n1, long_t n2, long_t *f1, long_t *f2, long_t *ggt) {
 	int ai, bi, a1, a2, b1, b2, f, d;
 	ai = n1;
@@ -51,9 +42,8 @@ long_t b_k(long_t b0, long_t k, long_t n1, long_t ggT) {
 	return b0-k*n1/ggT;
 }
 
-/* see explanation.JPG more background information about the maths */
 void solve(long_t n, long_t n1, long_t n2, long_t c1, long_t c2) {
-    if (n1 == n2 && n2 == n) {
+	if (n1 == n2 && n2 == n) {
 		printf("%ld 0\n", n1);
 		return;
 	}

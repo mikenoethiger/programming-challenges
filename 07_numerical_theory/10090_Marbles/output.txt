@@ -1,0 +1,15 @@
+mkdir -p out
+gcc -o out/main main.c
+out/main < input.txt
+6464 224720
+3595600 500
+1 1
+failed
+1 7
+failed
+failed
+75 152
+1 0
+0 1
+325 0
+0 65
