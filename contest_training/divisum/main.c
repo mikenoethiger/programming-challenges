@@ -84,9 +84,6 @@ int main() {
 	long_t cases, i, n;
 	scanf("%ld\n", &cases);
 
-//	for (i = 0; i < 200000; i++) {
-//		divisors[i] = 0;
-//	}
 	long_t sum;
 	for (i = 0; i < cases; i++) {
 		scanf("%ld\n", &n);

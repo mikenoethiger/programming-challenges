@@ -100,19 +100,6 @@ int m_q[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 
 bool debug = false;
 
-//int m_p[2][2] = {{m_down + m_left, m_down + m_right},
-//				 {m_up + m_left,   m_up + m_right}};
-//int m_n[8] = {2 * m_up + m_left, 2 * m_up + m_right,
-//			  2 * m_right + m_up, 2 * m_right + m_down,
-//			  2 * m_down + m_right, 2 * m_down + m_left,
-//			  2 * m_left + m_down, 2 * m_left + m_up};
-//int m_b[4] = {m_up + m_left, m_up + m_right, m_down + m_left, m_down + m_right};
-//int m_r[4] = {m_up, m_right, m_down, m_left};
-//int m_q[8] = {m_up, m_up + m_left,
-//			  m_left, m_left + m_down,
-//			  m_down, m_down + m_right,
-//			  m_right, m_right + m_up};
-
 /*
  * ALGORITHM
  */
@@ -196,7 +183,6 @@ int move(int i, int m, int *j) {
 		vn[6] = 0;
 	}
 	*j = vn[m] ? i + moves[m] : i;
-	debug_move(i, m, *j);
 	return vn[m];
 }
 

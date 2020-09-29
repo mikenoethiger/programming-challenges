@@ -1,7 +1,7 @@
 all:
 	mkdir -p out
-	gcc -o out/main5 -lm -O2 -pipe -ansi -DONLINE_JUDGE main5.c
-	out/main5 < input.txt
+	g++ -o out/main -lm -O2 -std=c++11 -pipe -DONLINE_JUDGE main.cpp
+	out/main < input.txt
 
 main2:
 	mkdir -p out
