@@ -1,7 +1,4 @@
-*Most proud of and well documented :)*
-* [10051 Tower of Cubes](https://github.com/mikenoethiger/programming-challenges/blob/master/10051_Tower_of_Cubes/main.c) (as well as the [improved O(n) version]([10051 Tower of Cubes](https://github.com/mikenoethiger/programming-challenges/blob/master/10051_Tower_of_Cubes/main2.c)))
-* [10142 Australian Voting](https://github.com/mikenoethiger/programming-challenges/blob/master/10142_Australian_Voting/main.cpp)
-* [10196 Check the Check](https://github.com/mikenoethiger/programming-challenges/blob/master/10196_Check_the_Check/main.c)
+Implementations for various [UVA](https://onlinejudge.org/index.php) programming challenges.
 
 **Index**
 
@@ -25,3 +22,8 @@
 * [10104 Light More Light](https://github.com/mikenoethiger/programming-challenges/blob/master/07_numerical_theory/10110_Light_More_Light/main.c)
 * [10139 Factovisors](https://github.com/mikenoethiger/programming-challenges/tree/master/07_numerical_theory/10139_Factovisors/main.c)
 * [10168 Summation of Four Primes](https://github.com/mikenoethiger/programming-challenges/blob/master/07_numerical_theory/10168_Summation_of_Four_Primes/main.c)
+
+*Most proud of and well documented :)*
+* [10051 Tower of Cubes](https://github.com/mikenoethiger/programming-challenges/blob/master/10051_Tower_of_Cubes/main.c) together with [improved O(n) version](https://github.com/mikenoethiger/programming-challenges/blob/master/10051_Tower_of_Cubes/main2.c)
+* [10142 Australian Voting](https://github.com/mikenoethiger/programming-challenges/blob/master/10142_Australian_Voting/main.cpp)
+* [10196 Check the Check](https://github.com/mikenoethiger/programming-challenges/blob/master/10196_Check_the_Check/main.c)
